@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ArrivIQ — Intelligent Airport Arrivals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--teal:#0db8b2;--teal2:#14d4ce;--gold:#f59e0b;--ch:#06101e;--wh:#fff;--off:#f6f8fc;--tl:#d0f5f3;--mu:#64748b;--mu2:#94a3b8;--bd:#dde5f0;--bd2:#c4d0e8}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--wh);color:var(--ch);overflow-x:hidden;line-height:1.6}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:.95rem 3.5rem;background:rgba(3,8,16,.92);border-bottom:1px solid rgba(13,184,178,.15);backdrop-filter:blur(24px)}
+.logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.55rem;color:#fff;display:flex;align-items:center;gap:10px;text-decoration:none;letter-spacing:-.01em}
+.ldot{width:10px;height:10px;border-radius:50%;background:var(--teal);animation:glow 2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(13,184,178,.5)}50%{box-shadow:0 0 22px rgba(13,184,178,1)}}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.88rem;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.ncta{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-weight:600;font-size:.85rem;padding:.62rem 1.6rem;border-radius:50px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;box-shadow:0 4px 20px rgba(13,184,178,.4)}
+.ncta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,184,178,.55)}
+
+/* HERO */
+.hero{position:relative;width:100%;height:100vh;min-height:700px;overflow:hidden}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* bottom text panel */
+.hero-panel{position:absolute;bottom:0;left:0;right:0;z-index:20;background:linear-gradient(0deg,rgba(4,10,20,1) 0%,rgba(4,10,20,.97) 35%,rgba(4,10,20,.72) 65%,rgba(4,10,20,.25) 85%,transparent 100%);padding:1.5rem 4rem 2.5rem;display:flex;flex-direction:column;align-items:center;text-align:center}
+.htag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(13,184,178,.12);border:1px solid rgba(13,184,178,.38);color:var(--teal2);font-size:.72rem;font-weight:600;letter-spacing:.1em;padding:.38rem 1.2rem;border-radius:50px;margin-bottom:1.2rem;text-transform:uppercase;animation:fu .9s .2s both}
+.htdot{width:5px;height:5px;border-radius:50%;background:var(--teal2)}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.9rem,3.4vw,3.2rem);line-height:1.08;color:#fff;letter-spacing:-.025em;max-width:700px;margin-bottom:.8rem;animation:fu .9s .35s both}
+.hero h1 em{font-style:italic;color:var(--teal2)}
+.hero-sub{font-size:clamp(.85rem,1.4vw,.98rem);color:rgba(255,255,255,.58);max-width:560px;line-height:1.75;margin-bottom:1.4rem;font-weight:300;animation:fu .9s .5s both}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fu .9s .65s both}
+.hbp{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-weight:600;font-size:.95rem;padding:.88rem 2.3rem;border-radius:50px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;letter-spacing:.02em;transition:all .28s;box-shadow:0 6px 26px rgba(13,184,178,.45)}
+.hbp:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(13,184,178,.6)}
+.hbg{background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);font-size:.95rem;padding:.88rem 2.3rem;border-radius:50px;border:1px solid rgba(255,255,255,.2);cursor:pointer;font-family:'Outfit',sans-serif;font-weight:400;letter-spacing:.02em;transition:all .28s}
+.hbg:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.35)}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* phase badge */
+
+
+
+
+/* floating notification */
+
+
+
+
+
+
+
+.nf-b strong{color:#0a5c1a;font-weight:700}
+
+.live{position:absolute;top:6%;left:4%;z-index:30;display:flex;align-items:center;gap:9px;background:rgba(13,184,178,.12);border:1px solid rgba(13,184,178,.4);border-radius:50px;padding:9px 18px;animation:bob 5s ease-in-out infinite 2s,fu .9s 1s both}
+.lv-d{width:8px;height:8px;border-radius:50%;background:var(--teal2);box-shadow:0 0 12px var(--teal2);animation:glow 2s infinite}
+.lv-t{font-family:'Outfit',sans-serif;font-size:10.5px;font-weight:600;color:var(--teal2);letter-spacing:.07em}
+
+/* PAGE */
+.sbar{display:flex;justify-content:center;flex-wrap:wrap;background:linear-gradient(180deg,#040a14,#0a1522)}
+.sbi{text-align:center;padding:2.3rem 3rem;border-right:1px solid rgba(255,255,255,.05);flex:1;min-width:130px}
+.sbi:last-child{border-right:none}
+.snum{font-family:'Playfair Display',serif;font-weight:800;font-size:2.2rem;color:var(--teal2);display:block;letter-spacing:-.02em}
+.slbl2{font-family:'Outfit',sans-serif;font-size:.78rem;color:rgba(255,255,255,.36);margin-top:.28rem;font-weight:300;letter-spacing:.04em}
+.sec{padding:7.5rem 2rem}.sinn{max-width:1120px;margin:0 auto}
+.slb{font-family:'Outfit',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.18em;color:var(--teal);text-transform:uppercase;margin-bottom:.9rem;display:flex;align-items:center;gap:.6rem}
+.slb::before{content:'';width:22px;height:1.5px;background:linear-gradient(90deg,var(--teal),transparent)}
+.sti{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(2rem,3.4vw,3rem);color:var(--ch);line-height:1.1;letter-spacing:-.025em;margin-bottom:1.1rem}
+.sti span{color:var(--teal)}
+.ssu{font-family:'Outfit',sans-serif;color:var(--mu);font-size:1rem;max-width:520px;line-height:1.82;font-weight:300}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);margin-top:5rem;border:1px solid var(--bd);border-radius:22px;overflow:hidden;background:var(--wh);box-shadow:0 6px 40px rgba(10,22,40,.07)}
+.step{padding:3rem 2rem;border-right:1px solid var(--bd);position:relative;transition:background .28s}
+.step:last-child{border-right:none}
+.step:hover{background:#f8fbff}
+.stn{font-family:'Playfair Display',serif;font-weight:900;font-size:3.5rem;color:#eef1f8;line-height:1;margin-bottom:1.3rem}
+.stic{width:46px;height:46px;border-radius:13px;background:var(--tl);display:flex;align-items:center;justify-content:center;margin-bottom:1.3rem}
+.stic svg{width:21px;height:21px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.step h3{font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;color:var(--ch);margin-bottom:.5rem}
+.step p{font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--mu);line-height:1.72;font-weight:300}
+.sarr{position:absolute;right:-14px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:var(--wh);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:.78rem;z-index:2}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:5rem}
+.fc{background:var(--wh);border:1px solid var(--bd);border-radius:22px;padding:2.4rem;transition:all .32s;position:relative;overflow:hidden}
+.fc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2));transform:scaleX(0);transform-origin:left;transition:transform .38s}
+.fc:hover{border-color:rgba(13,184,178,.28);transform:translateY(-5px);box-shadow:0 20px 55px rgba(10,22,40,.08)}
+.fc:hover::before{transform:scaleX(1)}
+.fic{width:50px;height:50px;border-radius:15px;background:var(--tl);display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem}
+.fic svg{width:22px;height:22px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fc h3{font-family:'Outfit',sans-serif;font-weight:600;font-size:1.05rem;color:var(--ch);margin-bottom:.5rem}
+.fc p{font-family:'Outfit',sans-serif;font-size:.86rem;color:var(--mu);line-height:1.72;font-weight:300}
+.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:5.5rem;align-items:center;margin-top:5rem}
+.ph3d{background:var(--wh);border:1px solid var(--bd);border-radius:26px;padding:1.8rem;max-width:350px;box-shadow:0 28px 80px rgba(10,22,40,.1);transform:perspective(1400px) rotateY(-7deg) rotateX(2deg);transition:transform .45s}
+.ph3d:hover{transform:perspective(1400px) rotateY(-2deg) rotateX(1deg)}
+.phb{display:flex;align-items:center;gap:.95rem;padding-bottom:1.1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--bd)}
+.phav{width:40px;height:40px;border-radius:50%;background:var(--ch);display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:700;color:#fff;flex-shrink:0}
+.phn{font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;color:var(--ch)}
+.phs{font-family:'Outfit',sans-serif;font-size:.72rem;color:var(--mu);margin-top:1px}
+.wam{background:#eafce8;border-radius:16px 16px 16px 3px;padding:1.2rem 1.3rem;font-family:'Outfit',sans-serif;font-size:.82rem;color:#1a2e1b;line-height:1.78}
+.wam strong{color:#0a5c1a;font-weight:600}
+.wamt{font-size:.69rem;color:#94a3b8;text-align:right;margin-top:.55rem}
+.npts{display:flex;flex-direction:column;gap:1.9rem}
+.npt{display:flex;gap:1.2rem;align-items:flex-start}
+.npic{width:46px;height:46px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+.ig{background:#e6f9ee;border:1px solid #b3e8c4}.ia{background:#fef9e7;border:1px solid #fde68a}
+.ib{background:#eff6ff;border:1px solid #bfdbfe}.ir{background:#fef2f2;border:1px solid #fecaca}
+.npt h4{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;color:var(--ch);margin-bottom:.28rem}
+.npt p{font-family:'Outfit',sans-serif;font-size:.83rem;color:var(--mu);line-height:1.65;font-weight:300}
+.btrow{display:flex;align-items:center;justify-content:center;gap:1.1rem;margin-bottom:4rem}
+.tpill{display:flex;background:#eef1f8;border-radius:50px;padding:5px;gap:3px}
+.tpb{padding:.5rem 1.4rem;border-radius:50px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.87rem;font-weight:500;transition:all .24s;background:transparent;color:var(--mu)}
+.tpb.on{background:var(--ch);color:#fff;box-shadow:0 3px 12px rgba(10,22,40,.22)}
+.spill{background:#dcfce7;color:#166534;font-size:.72rem;font-weight:600;padding:.24rem .78rem;border-radius:50px;border:1px solid #bbf7d0;font-family:'Outfit',sans-serif}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem}
+.pc{background:var(--wh);border:1px solid var(--bd);border-radius:22px;padding:2.2rem;position:relative;display:flex;flex-direction:column;transition:all .3s}
+.pc:hover{box-shadow:0 14px 46px rgba(10,22,40,.09)}
+.pc.ft{border:2px solid var(--ch);box-shadow:0 10px 38px rgba(10,22,40,.11)}
+.popb{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--ch);color:#fff;font-family:'Outfit',sans-serif;font-size:.68rem;font-weight:700;padding:.28rem .96rem;border-radius:50px;letter-spacing:.07em;white-space:nowrap}
+.pnm{font-family:'Outfit',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.14em;color:var(--mu);text-transform:uppercase;margin-bottom:.5rem}
+.ppr{font-family:'Playfair Display',serif;font-weight:800;font-size:2.6rem;color:var(--ch);line-height:1;margin-bottom:.22rem}
+.ppr span{font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:400;color:var(--mu)}
+.ptrl{font-family:'Outfit',sans-serif;font-size:.78rem;color:var(--teal);font-weight:500;margin-bottom:.45rem}
+.pds{font-family:'Outfit',sans-serif;font-size:.8rem;color:var(--mu);margin-bottom:1.5rem;flex:1;font-weight:300}
+.pfl{list-style:none;display:flex;flex-direction:column;gap:.52rem;margin-bottom:1.6rem}
+.pfl li{font-family:'Outfit',sans-serif;font-size:.83rem;color:var(--ch);display:flex;align-items:center;gap:.5rem}
+.ck{color:var(--teal);font-size:.78rem;font-weight:700}
+.pbtn{width:100%;padding:.82rem;border-radius:50px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .24s}
+.pbo{background:transparent;color:var(--ch);border:1.5px solid var(--bd2)}
+.pbo:hover{border-color:var(--ch);background:var(--off)}
+.pbd{background:var(--ch);color:#fff;border:none;box-shadow:0 5px 18px rgba(10,22,40,.22)}
+.pbd:hover{background:#0d1a2e;transform:translateY(-1px)}
+.covsec{background:linear-gradient(180deg,var(--ch),#050e1a);padding:7.5rem 2rem}
+.apwrap{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:3rem}
+.ap{font-family:'Outfit',sans-serif;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.46);font-size:.78rem;padding:.4rem .92rem;border-radius:50px;cursor:default;transition:all .22s;font-weight:300}
+.ap:hover{background:rgba(255,255,255,.08)}
+.ap.mj{border-color:rgba(13,184,178,.4);color:var(--teal2);background:rgba(13,184,178,.07);font-weight:500}
+.ctasec{text-align:center;padding:9rem 2rem;background:linear-gradient(135deg,#eef2ff,var(--wh) 40%,var(--tl))}
+.ctasec h2{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2.2rem,4.5vw,3.8rem);color:var(--ch);letter-spacing:-.025em;margin-bottom:1.1rem}
+.ctasec h2 span{color:var(--teal)}
+.ctasec p{font-family:'Outfit',sans-serif;color:var(--mu);font-size:1.06rem;margin-bottom:3.2rem;max-width:500px;margin-left:auto;margin-right:auto;font-weight:300;line-height:1.82}
+footer{padding:2.5rem 3.5rem;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fll{font-family:'Playfair Display',serif;font-weight:900;font-size:1.28rem;color:var(--ch);display:flex;align-items:center;gap:8px}
+.fcp{font-family:'Outfit',sans-serif;font-size:.78rem;color:var(--mu);font-weight:300}
+.flnk{display:flex;gap:1.6rem}
+.flnk a{font-family:'Outfit',sans-serif;font-size:.78rem;color:var(--mu);text-decoration:none;transition:color .2s}
+.flnk a:hover{color:var(--teal)}
+.ov{display:none;position:fixed;inset:0;background:rgba(2,6,9,.72);z-index:1000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)}
+.ov.open{display:flex}
+.modal{background:#fff;border-radius:26px;width:100%;max-width:530px;max-height:92vh;overflow-y:auto;box-shadow:0 36px 90px rgba(2,6,9,.35)}
+.mhd{padding:1.8rem 1.8rem 0;display:flex;align-items:center;justify-content:space-between}
+.mlg{font-family:'Playfair Display',serif;font-weight:900;font-size:1.28rem;color:var(--ch);display:flex;align-items:center;gap:7px}
+.mcl{width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);background:transparent;cursor:pointer;font-size:1.1rem;color:var(--mu);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mcl:hover{background:var(--off)}
+.mplan{margin:1.4rem 1.8rem;background:var(--off);border-radius:16px;padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between}
+.mpn{font-family:'Outfit',sans-serif;font-weight:600;font-size:.95rem;color:var(--ch)}
+.mpd{font-family:'Outfit',sans-serif;font-size:.78rem;color:var(--mu);margin-top:.15rem;font-weight:300}
+.mpp{font-family:'Playfair Display',serif;font-weight:800;font-size:1.6rem;color:var(--ch)}
+.mpc{font-family:'Outfit',sans-serif;font-size:.73rem;color:var(--mu);text-align:right}
+.mtrl{margin:.55rem 1.8rem 0;background:var(--tl);border-radius:11px;padding:.58rem 1rem;font-family:'Outfit',sans-serif;font-size:.79rem;color:#0c6e5a;font-weight:500}
+.mb2{padding:1.4rem 1.8rem 2rem}
+.fl2{font-family:'Outfit',sans-serif;font-size:.76rem;font-weight:600;color:var(--ch);margin-bottom:.4rem;display:block}
+.fi2{padding:.75rem 1rem;border:1px solid var(--bd2);border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:var(--ch);background:#fff;transition:border-color .22s,box-shadow .22s;outline:none;width:100%}
+.fi2:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,184,178,.12)}
+.fi2::placeholder{color:var(--mu2)}
+.frow{display:grid;gap:.95rem;margin-bottom:.95rem}.frow.two{grid-template-columns:1fr 1fr}
+.fg{display:flex;flex-direction:column}
+.cwrap{position:relative}.cwrap .fi2{padding-right:4.2rem}
+.cics{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);display:flex;gap:4px}
+.cic{width:32px;height:20px;border-radius:4px;border:1px solid var(--bd);background:var(--off);display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:700;overflow:hidden;position:relative}
+.cic.vs{color:#1a1f8c;font-style:italic;font-size:.56rem;font-weight:900}
+.cic.mc::before{content:'';position:absolute;left:4px;width:14px;height:14px;border-radius:50%;background:#eb001b;top:50%;transform:translateY(-50%)}
+.cic.mc::after{content:'';position:absolute;right:4px;width:14px;height:14px;border-radius:50%;background:#f79e1b;top:50%;transform:translateY(-50%)}
+.mdiv{height:1px;background:var(--bd);margin:1.3rem 0}
+.slsm{font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:var(--mu);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.9rem}
+.trw{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.9rem}
+.trw input{margin-top:3px;accent-color:var(--ch);width:14px;height:14px;flex-shrink:0;cursor:pointer}
+.trw label{font-family:'Outfit',sans-serif;font-size:.76rem;color:var(--mu);line-height:1.58}
+.trw a{color:var(--teal);text-decoration:none}
+.srw{display:flex;align-items:center;gap:.55rem;margin-bottom:1rem}
+.lkico{width:14px;height:14px;color:var(--mu2);flex-shrink:0}
+.srtxt{font-family:'Outfit',sans-serif;font-size:.72rem;color:var(--mu2)}
+.paybtn{width:100%;padding:.96rem;border-radius:50px;background:linear-gradient(135deg,var(--ch),#1d2f4e);color:#fff;font-family:'Outfit',sans-serif;font-weight:600;font-size:.96rem;border:none;cursor:pointer;transition:all .28s;box-shadow:0 5px 22px rgba(10,22,40,.22);letter-spacing:.03em}
+.paybtn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(10,22,40,.32)}
+.pnote{font-family:'Outfit',sans-serif;font-size:.72rem;color:var(--mu2);text-align:center;margin-top:.8rem;line-height:1.58}
+.succ{display:none;text-align:center;padding:2.8rem 1.8rem 3.2rem}
+.succ-ic{width:76px;height:76px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;border:2px solid rgba(13,184,178,.28)}
+.succ h3{font-family:'Playfair Display',serif;font-weight:800;font-size:1.6rem;color:var(--ch);margin-bottom:.75rem}
+.succ p{font-family:'Outfit',sans-serif;font-size:.89rem;color:var(--mu);max-width:320px;margin:0 auto .45rem;line-height:1.72}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr}.fgrid{grid-template-columns:1fr 1fr}.pgrid{grid-template-columns:1fr 1fr}.ngrid{grid-template-columns:1fr;gap:3rem}.nav-links{display:none}.hero-panel{padding:2rem 1.5rem 2.5rem}}
+@media(max-width:600px){.steps{grid-template-columns:1fr}.fgrid{grid-template-columns:1fr}.pgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Arriv<span style="color:#0db8b2;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;letter-spacing:-.02em;font-size:1.6rem">IQ</span> <span class="ldot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#feat">Features</a></li>
+    <li><a href="#price">Pricing</a></li>
+    <li><a href="#cov">Coverage</a></li>
+  </ul>
+  <button class="ncta" onclick="openM('Professional','199','month')">Start Free Trial</button>
+</nav>
+
+<section class="hero">
+  <canvas id="scene"></canvas>
+  <span class="ph-txt" id="phlbl">Flight BA0245 — Final Approach</span></div>
+
+  <div class="live"><div class="lv-d"></div><span class="lv-t">LIVE MONITORING</span></div>
+  <div id="scene-left-lbl" style="position:absolute;bottom:48%;left:3.5%;z-index:28;background:rgba(4,10,20,.82);border:1px solid rgba(13,184,178,.28);border-radius:12px;padding:.55rem 1rem;backdrop-filter:blur(12px);animation:fu 1s .8s both;max-width:180px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><div style="width:6px;height:6px;border-radius:50%;background:#14d4ce"></div><span style="font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:600;color:#14d4ce;letter-spacing:.08em;text-transform:uppercase" id="lbl-left-cat">Flight BA0245</span></div>
+    <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:2px" id="lbl-left-title">On Final Approach</div>
+    <div style="font-family:'Outfit',sans-serif;font-size:.68rem;color:rgba(255,255,255,.45);font-weight:300" id="lbl-left-sub">Heathrow LHR · ETA 14:15 UTC</div>
+  </div>
+  <div id="scene-right-lbl" style="position:absolute;bottom:48%;right:3.5%;z-index:30;background:rgba(4,10,20,.82);border:1px solid rgba(251,191,36,.28);border-radius:12px;padding:.55rem 1rem;backdrop-filter:blur(12px);animation:fu 1s .9s both;max-width:180px;text-align:right">
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-bottom:3px"><span style="font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:600;color:#fbbf24;letter-spacing:.08em;text-transform:uppercase" id="lbl-right-cat">Driver James</span><div style="width:6px;height:6px;border-radius:50%;background:#fbbf24"></div></div>
+    <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:2px" id="lbl-right-title">Waiting at Arrivals</div>
+    <div style="font-family:'Outfit',sans-serif;font-size:.68rem;color:rgba(255,255,255,.45);font-weight:300" id="lbl-right-sub">Car Reg: AB12 CDE · Ready</div>
+  </div>
+  <div class="hero-panel">
+    <div class="htag"><span class="htdot"></span>Built for UK Chauffeur &amp; Meet &amp; Greet Companies</div>
+    <h1>Stop guessing when<br>your customer lands.<br><em>Arriv<span style="font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;color:#0db8b2">IQ</span> tells your driver.</em></h1>
+    <p class="hero-sub">Your driver gets a WhatsApp alert automatically — 45 minutes before every return flight lands. No more manually checking FlightAware. No more missed pickups. No more angry customers waiting outside arrivals.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.2rem;animation:fu .9s .62s both">
+      <div style="display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:.35rem 1rem">
+        <span style="color:#14d4ce;font-size:.8rem">✓</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:rgba(255,255,255,.75);font-weight:300">Works for return pickups</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:.35rem 1rem">
+        <span style="color:#14d4ce;font-size:.8rem">✓</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:rgba(255,255,255,.75);font-weight:300">Works for car drop-offs</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:.35rem 1rem">
+        <span style="color:#14d4ce;font-size:.8rem">✓</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:rgba(255,255,255,.75);font-weight:300">Instant alerts for delays &amp; diversions</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:.35rem 1rem">
+        <span style="color:#14d4ce;font-size:.8rem">✓</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:rgba(255,255,255,.75);font-weight:300">All 40+ UK airports covered</span>
+      </div>
+    </div>
+    <div class="hbtns">
+      <button class="hbp" onclick="document.getElementById('price').scrollIntoView({behavior:'smooth'})">See Pricing — 30 Day Free Trial</button>
+      <button class="hbg" onclick="openDemo()">Book a Free Demo ›</button>
+    </div>
+  </div>
+</section>
+
+<div class="sbar">
+  <div class="sbi"><span class="snum">40+</span><div class="slbl2">UK airports covered</div></div>
+  <div class="sbi"><span class="snum">45 min</span><div class="slbl2">Before landing — driver alerted</div></div>
+  <div class="sbi"><span class="snum">3</span><div class="slbl2">Live flight data sources</div></div>
+  <div class="sbi"><span class="snum">£0</span><div class="slbl2">Staff time checking flights</div></div>
+  <div class="sbi"><span class="snum">24/7</span><div class="slbl2">Monitoring — no days off</div></div>
+</div>
+
+<section id="how" class="sec" style="background:var(--off)">
+  <div class="sinn">
+    <div class="slb">How It Works</div>
+    <h2 class="sti">Set it up once.<br><span>It works forever after that.</span></h2>
+    <p class="ssu">No software to install. No training needed. Your team just saves the flight number at booking time — ArrivIQ does everything else from that moment onwards.</p>
+    <div class="steps">
+      <div class="step"><div class="stn">01</div><div class="stic"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><h3>Customer gives flight number</h3><p>When a customer books, they give their flight number. Your team links it to the car registration. That's it — nothing else to do.</p><div class="sarr">›</div></div>
+      <div class="step"><div class="stn">02</div><div class="stic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><h3>ArrivIQ watches the flight</h3><p>From that moment, ArrivIQ tracks the flight every 5 minutes using 3 live data sources. Your team don't need to check anything manually.</p><div class="sarr">›</div></div>
+      <div class="step"><div class="stn">03</div><div class="stic"><svg viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><h3>System decides when to alert</h3><p>ArrivIQ works out the perfect moment to send the alert — 45 minutes before landing. If the flight is delayed or diverted, it alerts the driver straight away.</p><div class="sarr">›</div></div>
+      <div class="step"><div class="stn">04</div><div class="stic"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h3>Driver gets a WhatsApp</h3><p>The driver receives a WhatsApp message with the flight status, terminal, landing time, passenger name and car reg — everything they need in one message.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="feat" class="sec">
+  <div class="sinn">
+    <div class="slb">What ArrivIQ does for you</div>
+    <h2 class="sti">Stop paying staff to<br><span>watch flight boards.</span></h2>
+    <div class="fgrid">
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><h3>Every UK airport covered</h3><p>Heathrow, Gatwick, Manchester, Edinburgh and all 40+ UK airports. Your drivers get alerts no matter which airport the customer flies into — from day one, no setup needed.</p></div>
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg></div><h3>Never misses a flight change</h3><p>If a flight is delayed, diverted or cancelled, your driver gets an instant WhatsApp — not a notification 3 hours later. We check 3 live data sources every 5 minutes so nothing slips through.</p></div>
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Works for drop-offs too</h3><p>Not just return pickups. When a customer drops their car before flying out, ArrivIQ tracks their outbound flight and alerts your team at the right time — no more staff standing around waiting.</p></div>
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 4v3h-7V8zM5 17v2M12 17v2"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/></svg></div><h3>Driver gets everything in one message</h3><p>Flight status, terminal, landing time, passenger name, car registration — all in a single WhatsApp. No back-and-forth calls. No confusion. Just one clear message and the driver knows exactly what to do.</p></div>
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h3>Full record of every alert sent</h3><p>Every WhatsApp logged with exact timestamp, flight status and confirmation it was delivered. Useful if a customer ever disputes a missed pickup — you have proof of exactly what happened.</p></div>
+      <div class="fc"><div class="fic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div><h3>Fits around how you already work</h3><p>No need to change your booking system. ArrivIQ works alongside whatever software you use today. Larger operators can connect via our full API or use white-label branding under their own name.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE FLIGHT UPDATE SHOWCASE -->
+<section style="background:linear-gradient(135deg,#06101e 0%,#0a1828 50%,#06101e 100%);padding:7.5rem 2rem;position:relative;overflow:hidden">
+  <!-- Background teal glow -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(13,184,178,.08),transparent 70%);pointer-events:none"></div>
+
+  <div style="max-width:1120px;margin:0 auto;position:relative">
+    <div style="text-align:center;margin-bottom:4rem">
+      <div style="font-family:'Outfit',sans-serif;font-size:.68rem;font-weight:600;letter-spacing:.18em;color:#0db8b2;text-transform:uppercase;margin-bottom:.9rem;display:flex;align-items:center;justify-content:center;gap:.6rem">
+        <span style="width:22px;height:1.5px;background:linear-gradient(90deg,transparent,#0db8b2)"></span>
+        Live flight intelligence
+        <span style="width:22px;height:1.5px;background:linear-gradient(90deg,#0db8b2,transparent)"></span>
+      </div>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,3.4vw,3rem);color:#fff;line-height:1.1;letter-spacing:-.025em;margin-bottom:1rem">Your driver knows what's happening<br><span style="color:#0db8b2">before it happens.</span></h2>
+      <p style="font-family:'Outfit',sans-serif;color:rgba(255,255,255,.5);font-size:1rem;max-width:500px;margin:0 auto;line-height:1.82;font-weight:300">Every possible flight event — handled automatically. Your team never need to check a single thing.</p>
+    </div>
+
+    <!-- 4 update cards in a row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:4rem">
+
+      <!-- On Time -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(13,184,178,.25);border-radius:18px;padding:1.6rem;transition:all .3s;cursor:default" onmouseover="this.style.background='rgba(13,184,178,.08)';this.style.borderColor='rgba(13,184,178,.5)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(13,184,178,.25)'">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.4);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem">✅</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#16a34a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">On time</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.6rem">45-min alert sent</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.65;font-weight:300">Flight is on schedule. Driver gets terminal, gate and exact landing time — 45 minutes before touchdown.</div>
+        <div style="margin-top:1rem;background:rgba(22,163,74,.12);border-radius:8px;padding:.6rem .8rem;font-family:'Outfit',sans-serif;font-size:.75rem;color:#86efac;line-height:1.55">
+          <strong style="color:#4ade80">WhatsApp sent:</strong><br>
+          "BA0245 landing in 45 mins. LHR T5. John Smith. AB12 CDE."
+        </div>
+      </div>
+
+      <!-- Delayed -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(245,158,11,.2);border-radius:18px;padding:1.6rem;transition:all .3s;cursor:default" onmouseover="this.style.background='rgba(245,158,11,.06)';this.style.borderColor='rgba(245,158,11,.45)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(245,158,11,.2)'">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.4);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem">⏳</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#f59e0b;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">Delayed</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.6rem">Instant new ETA</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.65;font-weight:300">Flight pushed back. Driver is notified immediately with the new landing time so they don't leave too early.</div>
+        <div style="margin-top:1rem;background:rgba(245,158,11,.1);border-radius:8px;padding:.6rem .8rem;font-family:'Outfit',sans-serif;font-size:.75rem;color:#fcd34d;line-height:1.55">
+          <strong style="color:#fbbf24">WhatsApp sent:</strong><br>
+          "BA0245 now delayed. New ETA 18:45. Please adjust pickup time."
+        </div>
+      </div>
+
+      <!-- Diverted -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(59,130,246,.2);border-radius:18px;padding:1.6rem;transition:all .3s;cursor:default" onmouseover="this.style.background='rgba(59,130,246,.06)';this.style.borderColor='rgba(59,130,246,.45)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(59,130,246,.2)'">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.4);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem">🔀</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#60a5fa;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">Diverted</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.6rem">Different airport alert</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.65;font-weight:300">Flight landing somewhere else. Driver gets the new airport immediately — before the passenger even lands.</div>
+        <div style="margin-top:1rem;background:rgba(59,130,246,.1);border-radius:8px;padding:.6rem .8rem;font-family:'Outfit',sans-serif;font-size:.75rem;color:#93c5fd;line-height:1.55">
+          <strong style="color:#60a5fa">WhatsApp sent:</strong><br>
+          "URGENT — BA0245 diverted to Gatwick LGW. Contact passenger."
+        </div>
+      </div>
+
+      <!-- Cancelled -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(239,68,68,.2);border-radius:18px;padding:1.6rem;transition:all .3s;cursor:default" onmouseover="this.style.background='rgba(239,68,68,.06)';this.style.borderColor='rgba(239,68,68,.45)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.borderColor='rgba(239,68,68,.2)'">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem">❌</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#f87171;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">Cancelled</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.6rem">Booking flagged instantly</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.65;font-weight:300">Flight cancelled. Driver and office both notified immediately. No wasted trip. No angry customer waiting.</div>
+        <div style="margin-top:1rem;background:rgba(239,68,68,.1);border-radius:8px;padding:.6rem .8rem;font-family:'Outfit',sans-serif;font-size:.75rem;color:#fca5a5;line-height:1.55">
+          <strong style="color:#f87171">WhatsApp sent:</strong><br>
+          "BA0245 cancelled. Do not travel to airport. Contact John Smith."
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom strip — reassurance -->
+    <div style="background:rgba(13,184,178,.06);border:1px solid rgba(13,184,178,.2);border-radius:16px;padding:1.4rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <div style="width:10px;height:10px;border-radius:50%;background:#0db8b2;box-shadow:0 0 10px rgba(13,184,178,.7)"></div>
+        <span style="font-family:'Outfit',sans-serif;font-size:.88rem;color:rgba(255,255,255,.75);font-weight:400">ArrivIQ monitors every flight <strong style="color:#fff">every 5 minutes</strong>, 24 hours a day, 7 days a week</span>
+      </div>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+        <span style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.45)">✓ No app for drivers</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.45)">✓ No training needed</span>
+        <span style="font-family:'Outfit',sans-serif;font-size:.82rem;color:rgba(255,255,255,.45)">✓ Just WhatsApp</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="background:var(--off)">
+  <div class="sinn">
+    <div class="slb">What the driver receives</div>
+    <h2 class="sti">One WhatsApp.<br><span>Everything they need.</span></h2>
+    <div class="ngrid">
+      <div><div class="ph3d">
+        <div class="phb"><div class="phav">AI</div><div><div class="phn">ArrivIQ</div><div class="phs">WhatsApp · Just now</div></div></div>
+        <div class="wam">✈️ <strong>45 Min Notice — BA0245</strong><br><br>Hi James,<br><br>Flight <strong>BA0245</strong> is on schedule, landing in ~45 minutes.<br><br>📍 Airport: <strong>Heathrow (LHR) — T5</strong><br>🕐 ETA: <strong>14:15 UTC</strong><br>👤 Passenger: John Smith<br>🚗 Car Reg: AB12 CDE<br><br>Please proceed to arrivals. Safe driving! 🙏<div class="wamt">Delivered ✓✓</div></div>
+      </div></div>
+      <div class="npts">
+        <div class="npt"><div class="npic ig">✅</div><div><h4>On Time — 45-min alert</h4><p>Sent exactly 45 minutes before landing. Driver gets terminal, ETA, passenger name and car reg in one message.</p></div></div>
+        <div class="npt"><div class="npic ia">⏳</div><div><h4>Flight Delayed</h4><p>Immediate alert with new ETA the moment a delay is confirmed. Driver rescheduled automatically.</p></div></div>
+        <div class="npt"><div class="npic ib">🔀</div><div><h4>Flight Diverted</h4><p>Urgent alert with new airport. Driver prompted to update pickup location and contact passenger.</p></div></div>
+        <div class="npt"><div class="npic ir">❌</div><div><h4>Flight Cancelled</h4><p>Immediate alert. Booking flagged and driver prompted to contact passenger directly.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="price" class="sec">
+  <div class="sinn">
+    <div class="slb">Pricing</div>
+    <h2 class="sti">Built for real fleet sizes.<br><span>No surprises.</span></h2>
+    <p class="ssu" style="margin-bottom:.8rem">Priced per vehicle, not per journey — costs stay flat even on your busiest days. 30-day free trial on all plans.</p>
+    <p style="font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--mu);margin-bottom:2.8rem;max-width:620px;line-height:1.7">A company doing <strong style="color:var(--ch)">30 return pickups a day</strong> spends ~£500–£650/month in coordinator time watching flight boards. ArrivIQ pays for itself within the first week.</p>
+    <div class="btrow">
+      <div class="tpill"><button class="tpb on" id="tm" onclick="setB('monthly')">Monthly</button><button class="tpb" id="ta" onclick="setB('annual')">Annual</button></div>
+      <span class="spill" id="sp" style="display:none">Save 20%</span>
+    </div>
+    <div class="pgrid" id="pg"></div>
+    <div style="margin-top:2rem;background:var(--off);border-radius:16px;padding:1.5rem 2rem;border:1px solid var(--bd)">
+      <p style="font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;color:var(--ch);margin-bottom:.6rem">How to choose your plan</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem">
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--mu);line-height:1.6"><strong style="color:var(--ch);display:block;margin-bottom:3px">Starter</strong>Sole traders, 1–2 drivers, up to 15 vehicles. Perfect to start.</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--mu);line-height:1.6"><strong style="color:var(--ch);display:block;margin-bottom:3px">Growth</strong>30+ pickups/day, 20–40 vehicles. Most popular for Heathrow operators.</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--mu);line-height:1.6"><strong style="color:var(--ch);display:block;margin-bottom:3px">Pro</strong>Multi-airport fleets up to 80 vehicles with a dedicated account manager.</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--mu);line-height:1.6"><strong style="color:var(--ch);display:block;margin-bottom:3px">Enterprise</strong>Unlimited vehicles, white-label branding, full REST API access.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cov" class="covsec">
+  <div class="sinn">
+    <div class="slb" style="color:var(--teal2)">Airport Coverage</div>
+    <h2 class="sti" style="color:#fff">Every UK airport. From day one.</h2>
+    <p class="ssu" style="color:rgba(255,255,255,.4)">ArrivIQ covers all IATA-coded UK airports. Major hubs in teal.</p>
+    <div class="apwrap">
+      <div class="ap mj">Heathrow · LHR</div><div class="ap mj">Gatwick · LGW</div><div class="ap mj">Manchester · MAN</div><div class="ap mj">Stansted · STN</div><div class="ap mj">Luton · LTN</div><div class="ap mj">Edinburgh · EDI</div><div class="ap mj">Birmingham · BHX</div><div class="ap mj">Glasgow · GLA</div>
+      <div class="ap">Bristol · BRS</div><div class="ap">London City · LCY</div><div class="ap">Newcastle · NCL</div><div class="ap">Leeds Bradford · LBA</div><div class="ap">Liverpool · LPL</div><div class="ap">East Midlands · EMA</div><div class="ap">Belfast · BFS</div><div class="ap">Aberdeen · ABZ</div><div class="ap">Cardiff · CWL</div><div class="ap">Southampton · SOU</div><div class="ap">+ All Others</div>
+    </div>
+  </div>
+</section>
+
+<section class="ctasec">
+  <h2>Your drivers should never<br>be <span>waiting at the wrong time.</span></h2>
+  <p>Join UK chauffeur and meet & greet companies using ArrivIQ. Try it free for 30 days — no card charged, no commitment, cancel any time.</p>
+  <div style="display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap">
+    <button class="hbp" onclick="openM('Professional','199','month')">Start Free Trial — No Card Now</button>
+    <button onclick="openDemo()" style="background:transparent;color:var(--ch);font-size:.95rem;padding:.88rem 2.3rem;border-radius:50px;border:1.5px solid var(--bd2);cursor:pointer;font-family:'Outfit',sans-serif;font-weight:400;transition:all .24s" onmouseover="this.style.borderColor='#0db8b2';this.style.color='#0db8b2'" onmouseout="this.style.borderColor='';this.style.color=''" onclick="openDemo()">Book a Demo</button>
+  </div>
+</section>
+
+<footer>
+  <div class="fll">Arriv<span style="color:#0db8b2;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;letter-spacing:-.02em;font-size:1.6rem">IQ</span> <span class="ldot"></span></div>
+  <div class="fcp">© 2026 ArrivIQ Ltd · All rights reserved · Registered in England & Wales</div>
+  <div class="flnk"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">API Docs</a></div>
+</footer>
+
+<div class="ov" id="ov" onclick="handleOv(event)">
+  <div class="modal">
+    <div class="mhd"><div class="mlg">Arriv<span style="color:#0db8b2;font-family:'Outfit',sans-serif;font-weight:700;font-style:normal;letter-spacing:-.02em;font-size:1.6rem">IQ</span> <span class="ldot"></span></div><button class="mcl" onclick="closeM()">✕</button></div>
+    <div class="mplan"><div><div class="mpn" id="mpn">Professional Plan</div><div class="mpd" id="mpd">Up to 10 vehicles</div></div><div><div class="mpp" id="mpp">£199</div><div class="mpc" id="mpc">/month</div></div></div>
+    <div class="mtrl">🎁 30-day free trial — no charge until day 31</div>
+    <div class="mb2" id="cf">
+      <div class="slsm">Your Details</div>
+      <div class="frow"><div class="fg"><span class="fl2">Full Name</span><input class="fi2" type="text" placeholder="James Wilson"></div></div>
+      <div class="frow"><div class="fg"><span class="fl2">Email Address</span><input class="fi2" type="email" placeholder="james@londonexecutivecars.co.uk"></div></div>
+      <div class="frow two"><div class="fg"><span class="fl2">Company</span><input class="fi2" type="text" placeholder="London Executive Cars"></div><div class="fg"><span class="fl2">Phone</span><input class="fi2" type="tel" placeholder="+44 7700 900123"></div></div>
+      <div class="mdiv"></div>
+      <div class="slsm">Payment Details</div>
+      <div class="frow"><div class="fg cwrap"><span class="fl2">Card Number</span><input class="fi2" type="text" id="cn" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtC(this)"><div class="cics"><div class="cic vs">VISA</div><div class="cic mc"></div></div></div></div>
+      <div class="frow two"><div class="fg"><span class="fl2">Expiry</span><input class="fi2" type="text" id="ce" placeholder="MM / YY" maxlength="7" oninput="fmtE(this)"></div><div class="fg"><span class="fl2">CVV</span><input class="fi2" type="text" placeholder="123" maxlength="4"></div></div>
+      <div class="frow"><div class="fg"><span class="fl2">Name on Card</span><input class="fi2" type="text" placeholder="James Wilson"></div></div>
+      <div class="mdiv"></div>
+      <div class="slsm">Billing Address</div>
+      <div class="frow"><div class="fg"><span class="fl2">Address</span><input class="fi2" type="text" placeholder="123 High Street"></div></div>
+      <div class="frow two"><div class="fg"><span class="fl2">City</span><input class="fi2" type="text" placeholder="London"></div><div class="fg"><span class="fl2">Postcode</span><input class="fi2" type="text" placeholder="SW1A 1AA"></div></div>
+      <div class="frow"><div class="fg"><span class="fl2">Country</span><select class="fi2"><option>United Kingdom</option><option>Ireland</option><option>United States</option><option>Other</option></select></div></div>
+      <div class="mdiv"></div>
+      <div class="trw"><input type="checkbox" id="tcb"><label for="tcb">I agree to ArrivIQ's <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. My free trial lasts 30 days and I will be charged <span id="tpr">£199/month</span> from day 31 unless I cancel.</label></div>
+      <div class="srw"><svg class="lkico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span class="srtxt">256-bit SSL · PCI DSS compliant · Card details never stored</span></div>
+      <button class="paybtn" onclick="pay()">Start My Free 30-Day Trial →</button>
+      <div class="pnote">No charge today. Cancel before day 31 and you will never be billed.</div>
+    </div>
+    <div class="succ" id="ss">
+      <div class="succ-ic">✅</div>
+      <h3>Welcome to ArrivIQ!</h3>
+      <p>Your 30-day free trial has started. Check your email for login details.</p>
+      <p style="margin-top:.5rem;color:#0db8b2;font-weight:600;font-size:.83rem">You won't be charged until day 31.</p>
+      <button style="max-width:230px;margin:2rem auto 0;display:block;width:100%;padding:.82rem;border-radius:50px;background:#06101e;color:#fff;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500" onclick="closeM()">Go to Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+// ── VIVID CINEMATIC CANVAS ────────────────────────────────────────────────
+(function(){
+  const CV = document.getElementById('scene');
+  const G  = CV.getContext('2d');
+  let W=0, H=0;
+
+  function resize(){
+    const dpr = window.devicePixelRatio||1;
+    W = CV.clientWidth; H = CV.clientHeight;
+    CV.width = W*dpr; CV.height = H*dpr;
+    G.scale(dpr,dpr);
+  }
+  resize(); window.addEventListener('resize', resize);
+
+  const cl = (v,a,b)=>Math.max(a,Math.min(b,v));
+  const lr = (a,b,t)=>a+(b-a)*cl(t,0,1);
+  const ez = t=>t<.5?2*t*t:-1+(4-2*t)*t;
+
+  // 12-second loop, 4 phases
+  const LOOP = 12000;
+  const PHASES = [
+    '✈  Flight BA0245 — Final Approach',
+    '🛬  Touchdown — BA0245 Has Landed',
+    '🚶  Passengers Walking to Arrivals',
+    '🚗  Driver Waiting · Perfect Pickup'
+  ];
+  let t0=null, lastPh=-1;
+
+  // ── REUSABLE DRAW HELPERS ──────────────────────────────────────────────
+
+  // Draw a vivid gradient sky (always dusk/golden hour — bright and visible)
+  function sky(){
+    const sg = G.createLinearGradient(0,0,0,H*.56);
+    sg.addColorStop(0,   '#1a0a3a');
+    sg.addColorStop(.28, '#3b1c82');
+    sg.addColorStop(.55, '#c2410c');
+    sg.addColorStop(.75, '#f97316');
+    sg.addColorStop(.88, '#fbbf24');
+    sg.addColorStop(1,   '#fcd34d');
+    G.fillStyle=sg; G.fillRect(0,0,W,H*.57);
+
+    // Big sun glow
+    const sx=W*.74, sy=H*.56;
+    const sun=G.createRadialGradient(sx,sy,0,sx,sy,H*.28);
+    sun.addColorStop(0,'rgba(253,224,71,.7)');
+    sun.addColorStop(.35,'rgba(251,146,60,.35)');
+    sun.addColorStop(1,'rgba(251,146,60,0)');
+    G.fillStyle=sun; G.beginPath(); G.arc(sx,sy,H*.28,0,Math.PI*2); G.fill();
+    // Sun disc
+    G.fillStyle='rgba(255,255,200,.95)'; G.beginPath(); G.arc(sx,sy,H*.045,0,Math.PI*2); G.fill();
+    // Lens flare streak
+    const lf=G.createLinearGradient(0,sy,W,sy);
+    lf.addColorStop(0,'rgba(253,224,71,0)'); lf.addColorStop(.68,'rgba(255,255,200,.2)'); lf.addColorStop(.74,'rgba(253,224,71,.08)'); lf.addColorStop(1,'rgba(253,224,71,0)');
+    G.fillStyle=lf; G.fillRect(0,sy-3,W,6);
+  }
+
+  // Warm golden tarmac ground
+  function ground(gy){
+    const gg=G.createLinearGradient(0,gy,0,H);
+    gg.addColorStop(0,'#3d2208'); gg.addColorStop(.2,'#271608'); gg.addColorStop(.55,'#160e06'); gg.addColorStop(1,'#080610');
+    G.fillStyle=gg; G.fillRect(0,gy,W,H-gy);
+    // Golden horizon glow on tarmac
+    const hg=G.createRadialGradient(W*.74,gy,0,W*.74,gy,W*.6);
+    hg.addColorStop(0,'rgba(251,146,60,.28)'); hg.addColorStop(1,'rgba(251,146,60,0)');
+    G.fillStyle=hg; G.fillRect(0,gy-30,W,H-gy+30);
+  }
+
+  // Perspective runway with vivid teal lights
+  function runway(gy){
+    const cx=W*.48;
+    const rg2=G.createLinearGradient(0,gy,0,H*.9);
+    rg2.addColorStop(0,'#2a2010'); rg2.addColorStop(1,'#0e0c08');
+    G.fillStyle=rg2;
+    G.beginPath();
+    G.moveTo(cx-W*.1,gy); G.lineTo(cx+W*.1,gy);
+    G.lineTo(cx+W*1.3,H*.9); G.lineTo(cx-W*1.3,H*.9);
+    G.closePath(); G.fill();
+
+    // Centre line dashes
+    for(let i=0;i<10;i++){
+      const t=i/9,t2=(i+.35)/9;
+      const y1=lr(gy+4,H*.86,t), y2=lr(gy+4,H*.86,t2);
+      const hw=lr(2.5,24,t);
+      G.fillStyle=`rgba(255,255,255,${.55-.1*t})`;
+      G.beginPath();
+      G.moveTo(cx-hw,y1); G.lineTo(cx+hw,y1); G.lineTo(cx+hw,y2); G.lineTo(cx-hw,y2);
+      G.closePath(); G.fill();
+    }
+
+    // Edge lights — super bright teal and white alternating
+    for(let i=0;i<10;i++){
+      const t=i/9;
+      const y=lr(gy+6,H*.84,t);
+      const xL=cx-lr(W*.1,W*1.2,t)-lr(4,28,t);
+      const xR=cx+lr(W*.1,W*1.2,t)+lr(4,28,t);
+      const r=lr(2.5,7,t);
+      const col=i%2===0?'#14d4ce':'#ffe082';
+      const ca=i%2===0?'rgba(20,212,206,':'rgba(255,224,130,';
+      [xL,xR].forEach(x=>{
+        // Large glow halo
+        const halo=G.createRadialGradient(x,y,0,x,y,r*7);
+        halo.addColorStop(0,ca+'0.6)'); halo.addColorStop(1,ca+'0)');
+        G.fillStyle=halo; G.beginPath(); G.arc(x,y,r*7,0,Math.PI*2); G.fill();
+        // Bright dot
+        G.fillStyle=col; G.beginPath(); G.arc(x,y,r,0,Math.PI*2); G.fill();
+        G.fillStyle='rgba(255,255,255,.95)'; G.beginPath(); G.arc(x,y,r*.5,0,Math.PI*2); G.fill();
+      });
+    }
+  }
+
+  // Terminal building — vivid, glowing windows
+  function terminal(gy){
+    const bx=W*.03,by=H*.1,bw=W*.48,bh=H*.3;
+    // Body
+    const bg=G.createLinearGradient(bx,by,bx,by+bh);
+    bg.addColorStop(0,'#1e3d60'); bg.addColorStop(.6,'#102040'); bg.addColorStop(1,'#081528');
+    G.fillStyle=bg; G.beginPath(); G.roundRect(bx,by,bw,bh,5); G.fill();
+    // Golden hour glow on facade
+    G.fillStyle='rgba(251,146,60,.1)'; G.beginPath(); G.roundRect(bx,by,bw,bh*.45,4); G.fill();
+    // Overhang
+    G.fillStyle='#1a3050'; G.fillRect(bx-10,by-14,bw+20,18);
+
+    // Windows — VIVID warm yellow & cool blue mix
+    const wCols=16, wRows=3;
+    const ww=Math.floor(bw*.88/wCols), wh=Math.floor(bh*.55/wRows);
+    const wx0=bx+bw*.06, wy0=by+bh*.16;
+    for(let r=0;r<wRows;r++){
+      for(let c=0;c<wCols;c++){
+        if(Math.abs(Math.sin(r*9+c*7))>.7) continue;
+        const wx=wx0+c*(ww+4), wy=wy0+r*(wh+7);
+        const isBlue=(c%5===2);
+        const wCol=isBlue?'#7dd3fc':'#fef08a';
+        const wAlpha=isBlue?.78:.95;
+        // Glow
+        const wg=G.createRadialGradient(wx+ww/2,wy+wh/2,0,wx+ww/2,wy+wh/2,ww*1.5);
+        wg.addColorStop(0,isBlue?'rgba(125,211,252,.4)':'rgba(254,240,138,.45)'); wg.addColorStop(1,'rgba(0,0,0,0)');
+        G.fillStyle=wg; G.fillRect(wx-ww*.7,wy-wh*.7,ww*2.4,wh*2.4);
+        G.fillStyle=wCol; G.globalAlpha=wAlpha;
+        G.beginPath(); G.roundRect(wx,wy,ww,wh,2); G.fill(); G.globalAlpha=1;
+      }
+    }
+    // Sign
+    G.fillStyle='rgba(13,184,178,.95)'; G.beginPath(); G.roundRect(bx+bw*.26,by-30,bw*.48,20,6); G.fill();
+    G.fillStyle='#fff'; G.font='bold 11px Outfit,sans-serif'; G.textAlign='center';
+    G.fillText('HEATHROW  TERMINAL 5',bx+bw*.5,by-15);
+
+    // Tower
+    const tx=bx+bw*.94,ty=H*.06;
+    G.fillStyle='#162840'; G.fillRect(tx-11,ty+18,22,by+bh-ty-18);
+    G.fillStyle='#1e3555';
+    G.beginPath(); G.moveTo(tx-28,ty+18); G.lineTo(tx+28,ty+18); G.lineTo(tx+22,ty); G.lineTo(tx-22,ty); G.closePath(); G.fill();
+    ['#60a5fa','#93c5fd','#7dd3fc'].forEach((c,i)=>{
+      G.fillStyle=c; G.globalAlpha=.9;
+      G.beginPath(); G.roundRect(tx-21+i*15,ty+3,12,9,2); G.fill(); G.globalAlpha=1;
+    });
+    // Beacon
+    const ba=.5+.5*Math.sin(Date.now()*.007);
+    const tbg=G.createRadialGradient(tx,ty-5,0,tx,ty-5,20);
+    tbg.addColorStop(0,`rgba(255,60,0,${ba})`); tbg.addColorStop(1,'rgba(255,60,0,0)');
+    G.fillStyle=tbg; G.beginPath(); G.arc(tx,ty-5,20,0,Math.PI*2); G.fill();
+    G.fillStyle=`rgba(255,70,0,${.8+.2*ba})`; G.beginPath(); G.arc(tx,ty-5,5,0,Math.PI*2); G.fill();
+  }
+
+  // Big detailed aircraft
+  function aircraft(p, gy){
+    const pp=ez(p);
+    const ax=lr(W*.01,W*.50,pp);
+    const ay=lr(H*.08,gy+H*.015,pp);
+    const sc=lr(.5,1.0,pp);
+    const rot=lr(-.08,.04,ez(cl((p-.6)/.4,0,1)));
+
+    G.save(); G.translate(ax,ay); G.scale(sc,sc); G.rotate(rot);
+    const FL=200,FH=30;
+
+    // Landing light beam
+    if(p>.3){
+      const ba=cl((p-.3)/.25,0,1)*.72;
+      const beam=G.createLinearGradient(FL*.5,0,FL*.5+350,0);
+      beam.addColorStop(0,`rgba(255,248,180,${ba})`);
+      beam.addColorStop(.35,`rgba(255,248,180,${ba*.3})`);
+      beam.addColorStop(1,'rgba(255,248,180,0)');
+      G.fillStyle=beam;
+      G.beginPath(); G.moveTo(FL*.5,FH*.4); G.lineTo(FL*.5+350,-55); G.lineTo(FL*.5+350,55); G.lineTo(FL*.5,-FH*.4); G.closePath(); G.fill();
+    }
+
+    // Engine exhaust — vivid orange/yellow
+    [FH*1.12,-FH*1.12].forEach(ez2=>{
+      // Core ball — super bright
+      const ec=G.createRadialGradient(-FL*.33,ez2,0,-FL*.33,ez2,42);
+      ec.addColorStop(0,'rgba(255,240,100,1)');
+      ec.addColorStop(.25,'rgba(255,160,30,.95)');
+      ec.addColorStop(.6,'rgba(255,80,0,.4)');
+      ec.addColorStop(1,'rgba(255,80,0,0)');
+      G.fillStyle=ec; G.beginPath(); G.arc(-FL*.33,ez2,42,0,Math.PI*2); G.fill();
+      // Trail
+      const et=G.createLinearGradient(-FL*.33,ez2,-FL*.33-160,ez2);
+      et.addColorStop(0,'rgba(255,140,20,.55)'); et.addColorStop(.4,'rgba(255,100,0,.2)'); et.addColorStop(1,'rgba(255,80,0,0)');
+      G.fillStyle=et; G.fillRect(-FL*.33-160,ez2-10,160,20);
+    });
+
+    // Wings
+    [[FH*.7,FH*6.5,1],[-(FH*.7),-FH*6.5,-1]].forEach(([y1,y2,s])=>{
+      // Main wing — gradient metallic
+      const wg=G.createLinearGradient(0,y1,0,y2);
+      wg.addColorStop(0,'#e0eef8'); wg.addColorStop(.6,'#c0d8ec'); wg.addColorStop(1,'#88a8c4');
+      G.fillStyle=wg;
+      G.beginPath(); G.moveTo(-FL*.06,y1); G.lineTo(-FL*.44,y2); G.lineTo(-FL*.58,y2+s*7); G.lineTo(-FL*.06,y1+s*FH*.5); G.closePath(); G.fill();
+      // Flap
+      G.fillStyle='#b8d0e4';
+      G.beginPath(); G.moveTo(-FL*.1,y1+s*FH*.6); G.lineTo(-FL*.46,y2+s*3); G.lineTo(-FL*.46,y2+s*11); G.lineTo(-FL*.1,y1+s*FH*1.35); G.closePath(); G.fill();
+      // Winglet
+      G.fillStyle='#d0e0f0';
+      G.beginPath(); G.moveTo(-FL*.58,y2+s*7); G.lineTo(-FL*.58,y2+s*24); G.lineTo(-FL*.5,y2+s*21); G.closePath(); G.fill();
+    });
+
+    // Engines — chrome/metallic
+    [FH*1.12,-FH*1.12].forEach(ez2=>{
+      // Pylon
+      G.fillStyle='#7888a2'; G.fillRect(-FL*.02,ez2>0?FH*.55:-FH*1.2,FL*.24,FH*.65);
+      // Nacelle
+      const ng=G.createLinearGradient(-FL*.2,ez2,FL*.26,ez2);
+      ng.addColorStop(0,'#5a7090'); ng.addColorStop(.45,'#a8c0d8'); ng.addColorStop(.8,'#7890a8'); ng.addColorStop(1,'#506080');
+      G.fillStyle=ng; G.beginPath(); G.ellipse(FL*.04,ez2,FL*.22,FH*.98,0,0,Math.PI*2); G.fill();
+      // Intake ring
+      G.strokeStyle='#8098b8'; G.lineWidth=3;
+      G.beginPath(); G.ellipse(FL*.26,ez2,FH*.98,FH*.98,0,0,Math.PI*2); G.stroke();
+      G.fillStyle='#050e18'; G.beginPath(); G.ellipse(FL*.26,ez2,FH*.8,FH*.8,0,0,Math.PI*2); G.fill();
+      // Exhaust
+      const ex=G.createRadialGradient(-FL*.18,ez2,0,-FL*.18,ez2,FH*.72);
+      ex.addColorStop(0,'rgba(255,230,80,1)'); ex.addColorStop(.35,'rgba(255,140,20,.9)'); ex.addColorStop(1,'rgba(255,80,0,0)');
+      G.fillStyle=ex; G.beginPath(); G.ellipse(-FL*.18,ez2,FH*.72,FH*.72,0,0,Math.PI*2); G.fill();
+    });
+
+    // Fuselage — white/bright
+    const fg=G.createLinearGradient(0,-FH,0,FH);
+    fg.addColorStop(0,'#f8fbfe'); fg.addColorStop(.38,'#eef5fa'); fg.addColorStop(.7,'#dceaf5'); fg.addColorStop(1,'#c0d5e8');
+    G.fillStyle=fg; G.beginPath(); G.ellipse(0,0,FL*.52,FH,0,0,Math.PI*2); G.fill();
+
+    // Livery — VIVID teal + gold
+    G.save(); G.beginPath(); G.ellipse(0,0,FL*.52,FH,0,0,Math.PI*2); G.clip();
+    G.fillStyle='rgba(13,184,178,.96)'; G.fillRect(-FL*.52,FH*.33,FL*1.04,FH*.46);
+    G.fillStyle='rgba(251,191,36,.95)'; G.fillRect(-FL*.52,FH*.77,FL*1.04,FH*.2);
+    G.fillStyle='rgba(255,255,255,.88)'; G.font=`bold ${FH*.52}px Outfit,sans-serif`; G.textAlign='left';
+    G.fillText('ArrivIQ',-FL*.32,FH*.6);
+    G.restore();
+
+    // Nose
+    const nb=G.createLinearGradient(FL*.3,-FH,FL*.52,0);
+    nb.addColorStop(0,'#f8fcfe'); nb.addColorStop(1,'#e4f0f8');
+    G.fillStyle=nb;
+    G.beginPath(); G.moveTo(FL*.52,0); G.bezierCurveTo(FL*.55,-FH*.75,FL*.36,-FH,FL*.3,-FH); G.lineTo(-FL*.18,-FH); G.arc(0,0,FH,-Math.PI/2,Math.PI/2); G.lineTo(FL*.3,FH); G.bezierCurveTo(FL*.36,FH,FL*.55,FH*.75,FL*.52,0); G.fill();
+
+    // Tail fin
+    const tfg=G.createLinearGradient(-FL*.36,-FH,-FL*.52,-FH*4.8);
+    tfg.addColorStop(0,'#dce8f5'); tfg.addColorStop(1,'#c8d8ec');
+    G.fillStyle=tfg;
+    G.beginPath(); G.moveTo(-FL*.34,-FH); G.lineTo(-FL*.34,-FH*4.8); G.lineTo(-FL*.5,-FH*4.8); G.lineTo(-FL*.54,-FH); G.closePath(); G.fill();
+    // Teal on fin
+    G.fillStyle='#0db8b2';
+    G.beginPath(); G.moveTo(-FL*.36,-FH*1.2); G.lineTo(-FL*.36,-FH*4.3); G.lineTo(-FL*.44,-FH*4.3); G.lineTo(-FL*.47,-FH*1.2); G.closePath(); G.fill();
+    // Horizontal stabs
+    [FH*.22,-FH*.22].forEach(y=>{
+      G.fillStyle='#c8d8ec';
+      G.beginPath(); G.moveTo(-FL*.44,y); G.lineTo(-FL*.58,y>0?FH*3.2:-FH*3.2); G.lineTo(-FL*.52,y>0?FH*3.5:-FH*3.5); G.lineTo(-FL*.37,y); G.closePath(); G.fill();
+    });
+
+    // Landing gear
+    if(p>.38){
+      const ga=ez(cl((p-.38)/.2,0,1));
+      G.save(); G.globalAlpha=ga;
+      G.strokeStyle='#4a5870'; G.lineWidth=5.5; G.lineCap='round';
+      G.beginPath(); G.moveTo(FL*.33,FH*.85); G.lineTo(FL*.33,FH*2.5); G.stroke();
+      G.fillStyle='#0e1828'; G.beginPath(); G.ellipse(FL*.33,FH*2.8,FH*.98,FH*.52,0,0,Math.PI*2); G.fill();
+      [FL*.24,FL*.42].forEach(wx=>{ G.fillStyle='#1a2838'; G.beginPath(); G.ellipse(wx,FH*2.8,FH*.76,FH*.48,0,0,Math.PI*2); G.fill(); });
+      [[FL*.04,FH],[-(FL*.12),FH]].forEach(([gx,gy2])=>{
+        G.beginPath(); G.moveTo(gx,gy2*.85); G.lineTo(gx,gy2*2.6); G.stroke();
+        G.fillStyle='#0e1828'; G.beginPath(); G.ellipse(gx,gy2*2.9,FH*1.14,FH*.56,0,0,Math.PI*2); G.fill();
+        [gx-FH*.86,gx+FH*.86].forEach(wx=>{ G.fillStyle='#1a2838'; G.beginPath(); G.ellipse(wx,gy2*2.9,FH*.83,FH*.5,0,0,Math.PI*2); G.fill(); });
+      });
+      G.restore();
+    }
+
+    // Windows — bright
+    for(let i=-7;i<=7;i++){
+      const wx=i*FL*.067;
+      G.fillStyle='rgba(186,230,253,.95)';
+      G.beginPath(); G.ellipse(wx,-FH*.56,FL*.022,FH*.29,0,0,Math.PI*2); G.fill();
+      G.beginPath(); G.ellipse(wx, FH*.56,FL*.022,FH*.29,0,0,Math.PI*2); G.fill();
+    }
+    // Cockpit
+    G.fillStyle='rgba(186,230,253,.78)';
+    G.beginPath(); G.ellipse(FL*.41,-FH*.3,FL*.068,FH*.43,-.28,0,Math.PI*2); G.fill();
+    G.beginPath(); G.ellipse(FL*.41, FH*.3,FL*.068,FH*.43, .28,0,Math.PI*2); G.fill();
+
+    // Landing light — blazing
+    const ll=G.createRadialGradient(FL*.52,0,0,FL*.52,0,32);
+    ll.addColorStop(0,'rgba(255,255,220,1)'); ll.addColorStop(1,'rgba(255,255,220,0)');
+    G.fillStyle=ll; G.beginPath(); G.arc(FL*.52,0,32,0,Math.PI*2); G.fill();
+    G.fillStyle='#fff'; G.beginPath(); G.arc(FL*.52,0,6,0,Math.PI*2); G.fill();
+
+    // Nav lights vivid
+    [['-',FH*6.5,'#22ff55'],['-',-FH*6.5,'#ff3322']].forEach(([_,yz,col])=>{
+      const nl=G.createRadialGradient(-FL*.58,yz,0,-FL*.58,yz,12);
+      nl.addColorStop(0,col+'cc'); nl.addColorStop(1,col+'00');
+      G.fillStyle=nl; G.beginPath(); G.arc(-FL*.58,yz,12,0,Math.PI*2); G.fill();
+      G.fillStyle=col; G.beginPath(); G.arc(-FL*.58,yz,4,0,Math.PI*2); G.fill();
+    });
+
+    G.restore();
+  }
+
+  // Rich person figure
+  function person(x,y,sc,wt,skin,shirt,hasBag){
+    G.save(); G.translate(x,y); G.scale(sc,sc);
+    const sw=Math.sin(wt*Math.PI*9);
+    const bob=Math.abs(Math.sin(wt*Math.PI*9))*-2.5;
+
+    // Shadow
+    G.fillStyle=`rgba(0,0,0,${.18*sc})`;
+    G.beginPath(); G.ellipse(0,38+bob,13,5,0,0,Math.PI*2); G.fill();
+
+    // Legs
+    G.strokeStyle='#1e2a3a'; G.lineWidth=6.5; G.lineCap='round';
+    G.beginPath(); G.moveTo(-2,20+bob); G.lineTo(-6+sw*9,38+bob); G.stroke();
+    G.beginPath(); G.moveTo(2,20+bob);  G.lineTo(6-sw*9,38+bob);  G.stroke();
+    // Shoes
+    G.fillStyle='#0f172a';
+    G.beginPath(); G.ellipse(-6+sw*9,39+bob,7,3,-.2,0,Math.PI*2); G.fill();
+    G.beginPath(); G.ellipse(6-sw*9,39+bob,7,3,.2,0,Math.PI*2);   G.fill();
+
+    // Body — gradient shirt
+    const sg=G.createLinearGradient(-9,4+bob,9,20+bob);
+    sg.addColorStop(0,shirt); sg.addColorStop(1,shirt+'bb');
+    G.fillStyle=sg; G.beginPath(); G.roundRect(-9,4+bob,18,17,4); G.fill();
+    // Collar
+    G.fillStyle='rgba(255,255,255,.6)'; G.beginPath(); G.roundRect(-2.5,4+bob,5,6,1); G.fill();
+
+    // Arms swing
+    G.strokeStyle=skin; G.lineWidth=5; G.lineCap='round';
+    G.beginPath(); G.moveTo(-8,9+bob); G.lineTo(-14-sw*6,22+bob); G.stroke();
+    G.beginPath(); G.moveTo(8,9+bob);  G.lineTo(14+sw*6,22+bob);  G.stroke();
+
+    // Head
+    const hg=G.createRadialGradient(0,-3+bob,0,0,-3+bob,10);
+    hg.addColorStop(0,skin); hg.addColorStop(1,skin+'cc');
+    G.fillStyle=hg; G.beginPath(); G.arc(0,-2+bob,10,0,Math.PI*2); G.fill();
+    // Hair
+    G.fillStyle='#1a0800'; G.beginPath(); G.ellipse(0,-10+bob,10,6,0,Math.PI,Math.PI*2); G.fill();
+
+    // Luggage
+    if(hasBag){
+      const lg2=G.createLinearGradient(12,14+bob,24,30+bob);
+      lg2.addColorStop(0,'#475569'); lg2.addColorStop(1,'#2a3a4e');
+      G.fillStyle=lg2; G.beginPath(); G.roundRect(10+sw*1.5,14+bob,16,18,3); G.fill();
+      G.strokeStyle='rgba(148,163,184,.6)'; G.lineWidth=1.5;
+      G.beginPath(); G.moveTo(11+sw*1.5,23+bob); G.lineTo(25+sw*1.5,23+bob); G.stroke();
+      G.fillStyle='#64748b';
+      G.beginPath(); G.arc(12+sw*1.5,32+bob,3.5,0,Math.PI*2); G.fill();
+      G.beginPath(); G.arc(24+sw*1.5,32+bob,3.5,0,Math.PI*2); G.fill();
+    }
+    G.restore();
+  }
+
+  // Luxury car
+  function car(cx,cy,sc,alpha){
+    G.save(); G.globalAlpha=alpha; G.translate(cx,cy); G.scale(sc,sc);
+    const CW=135,CH=33;
+
+    // Ground shadow
+    G.fillStyle=G.createRadialGradient(0,CH+14,0,0,CH+14,CW*.95)||'rgba(0,0,0,0)';
+    const csh=G.createRadialGradient(0,CH+14,0,0,CH+14,CW*.95);
+    csh.addColorStop(0,'rgba(0,0,0,.55)'); csh.addColorStop(1,'rgba(0,0,0,0)');
+    G.fillStyle=csh; G.beginPath(); G.ellipse(0,CH+14,CW*.95,13,0,0,Math.PI*2); G.fill();
+
+    // Wheels
+    [[-CW*.55,CH+5],[CW*.55,CH+5]].forEach(([wx,wy])=>{
+      G.fillStyle='#0c1420'; G.beginPath(); G.arc(wx,wy,19,0,Math.PI*2); G.fill();
+      const rg3=G.createRadialGradient(wx,wy,0,wx,wy,15);
+      rg3.addColorStop(0,'#e8f4ff'); rg3.addColorStop(.5,'#a0c0d8'); rg3.addColorStop(1,'#608098');
+      G.fillStyle=rg3; G.beginPath(); G.arc(wx,wy,15,0,Math.PI*2); G.fill();
+      for(let s=0;s<6;s++){
+        const a=(s/6)*Math.PI*2;
+        G.strokeStyle='#b8d4e8'; G.lineWidth=2.5;
+        G.beginPath(); G.moveTo(wx,wy); G.lineTo(wx+Math.cos(a)*12,wy+Math.sin(a)*12); G.stroke();
+      }
+      G.fillStyle='#0db8b2'; G.beginPath(); G.arc(wx,wy,4.5,0,Math.PI*2); G.fill();
+      G.fillStyle='#fff'; G.beginPath(); G.arc(wx,wy,2,0,Math.PI*2); G.fill();
+    });
+
+    // Body
+    const bd=G.createLinearGradient(0,-CH*.3,0,CH);
+    bd.addColorStop(0,'#1e3d6a'); bd.addColorStop(.35,'#122850'); bd.addColorStop(.7,'#0a1a38'); bd.addColorStop(1,'#060e20');
+    G.fillStyle=bd; G.beginPath(); G.roundRect(-CW,-(CH*.3),CW*2,CH*1.32,10); G.fill();
+    // Metallic highlight
+    const mh=G.createLinearGradient(-CW,-(CH*.1),CW,-(CH*.1));
+    mh.addColorStop(0,'rgba(255,255,255,0)'); mh.addColorStop(.4,'rgba(255,255,255,.1)'); mh.addColorStop(.5,'rgba(255,255,255,.18)'); mh.addColorStop(.6,'rgba(255,255,255,.1)'); mh.addColorStop(1,'rgba(255,255,255,0)');
+    G.fillStyle=mh; G.fillRect(-CW,-(CH*.1),CW*2,6);
+
+    // Roof
+    const rf=G.createLinearGradient(0,-CH*1.7,0,-CH*.3);
+    rf.addColorStop(0,'#213d6a'); rf.addColorStop(1,'#122850');
+    G.fillStyle=rf; G.beginPath(); G.roundRect(-CW*.54,-CH*1.7,CW*1.08,CH*1.42,10); G.fill();
+    G.fillStyle='rgba(255,255,255,.07)'; G.beginPath(); G.roundRect(-CW*.5,-CH*1.65,CW*.58,7,3); G.fill();
+
+    // Windscreen
+    const ws=G.createLinearGradient(CW*.12,-CH*1.6,CW*.5,-CH*.3);
+    ws.addColorStop(0,'rgba(186,230,253,.42)'); ws.addColorStop(1,'rgba(186,230,253,.2)');
+    G.fillStyle=ws; G.beginPath(); G.roundRect(CW*.12,-CH*1.6,CW*.38,CH*1.32,6); G.fill();
+    G.strokeStyle='rgba(186,230,253,.45)'; G.lineWidth=1.5; G.beginPath(); G.roundRect(CW*.12,-CH*1.6,CW*.38,CH*1.32,6); G.stroke();
+
+    // Rear window
+    const rw=G.createLinearGradient(-CW*.52,-CH*1.55,-CW*.14,-CH*.3);
+    rw.addColorStop(0,'rgba(186,230,253,.32)'); rw.addColorStop(1,'rgba(186,230,253,.18)');
+    G.fillStyle=rw; G.beginPath(); G.roundRect(-CW*.52,-CH*1.55,CW*.36,CH*1.28,6); G.fill();
+    G.strokeStyle='rgba(186,230,253,.38)'; G.lineWidth=1; G.beginPath(); G.roundRect(-CW*.52,-CH*1.55,CW*.36,CH*1.28,6); G.stroke();
+
+    // Side windows
+    [[-CW*.12,-CH*1.55],[CW*.08,-CH*1.52]].forEach(([wx,wy])=>{
+      G.fillStyle='rgba(147,197,253,.3)'; G.beginPath(); G.roundRect(wx,wy,CW*.38,CH*1.22,5); G.fill();
+    });
+
+    // Door lines
+    G.strokeStyle='rgba(20,50,100,.8)'; G.lineWidth=1.5;
+    [-CW*.12,CW*.1].forEach(dx=>{ G.beginPath(); G.moveTo(dx,-(CH*.3)); G.lineTo(dx,CH*.98); G.stroke(); });
+
+    // Headlights — vivid
+    [[CW*.9,-(CH*.24)],[CW*.9,CH*.24]].forEach(([hx,hy])=>{
+      const hlg=G.createRadialGradient(hx,hy,0,hx,hy,45);
+      hlg.addColorStop(0,'rgba(254,252,210,.95)'); hlg.addColorStop(1,'rgba(254,252,210,0)');
+      G.fillStyle=hlg; G.beginPath(); G.arc(hx,hy,45,0,Math.PI*2); G.fill();
+      G.fillStyle='rgba(255,255,200,.92)'; G.beginPath(); G.ellipse(hx,hy,CW*.07,CH*.24,0,0,Math.PI*2); G.fill();
+      // DRL strip
+      G.fillStyle='rgba(255,255,255,.92)'; G.beginPath(); G.roundRect(hx-CW*.068,hy-2,CW*.1,4,2); G.fill();
+    });
+    // Headlight road beam
+    const hb=G.createLinearGradient(CW*.95,0,CW*.95+220,0);
+    hb.addColorStop(0,'rgba(254,250,200,.22)'); hb.addColorStop(1,'rgba(254,250,200,0)');
+    G.fillStyle=hb;
+    G.beginPath(); G.moveTo(CW*.95,CH*.35); G.lineTo(CW*.95+220,CH*2.2); G.lineTo(CW*.95+220,-CH*2.2); G.lineTo(CW*.95,-CH*.35); G.closePath(); G.fill();
+
+    // Tail lights
+    [[-CW*.95,-(CH*.24)],[-CW*.95,CH*.24]].forEach(([tx,ty])=>{
+      const tlg=G.createRadialGradient(tx,ty,0,tx,ty,22);
+      tlg.addColorStop(0,'rgba(255,30,30,.95)'); tlg.addColorStop(1,'rgba(255,30,30,0)');
+      G.fillStyle=tlg; G.beginPath(); G.arc(tx,ty,22,0,Math.PI*2); G.fill();
+      G.fillStyle='rgba(255,40,40,.9)'; G.beginPath(); G.ellipse(tx,ty,CW*.058,CH*.22,0,0,Math.PI*2); G.fill();
+    });
+
+    // Name board glowing
+    const nbg=G.createLinearGradient(-CW*.24,-CH*1.82,CW*.24,-CH*1.62);
+    nbg.addColorStop(0,'#f0f8ff'); nbg.addColorStop(1,'#e0eef8');
+    G.fillStyle=nbg; G.beginPath(); G.roundRect(-CW*.24,-CH*1.84,CW*.48,CH*.24,5); G.fill();
+    G.strokeStyle='#0db8b2'; G.lineWidth=2; G.beginPath(); G.roundRect(-CW*.24,-CH*1.84,CW*.48,CH*.24,5); G.stroke();
+    G.fillStyle='#06101e'; G.font='bold 10px Outfit,sans-serif'; G.textAlign='center';
+    G.fillText('JOHN  SMITH',0,-CH*1.67);
+    // Board glow
+    const bgl=G.createRadialGradient(0,-CH*1.84,0,0,-CH*1.84,CH*.55);
+    bgl.addColorStop(0,'rgba(255,255,255,.3)'); bgl.addColorStop(1,'rgba(255,255,255,0)');
+    G.fillStyle=bgl; G.beginPath(); G.arc(0,-CH*1.84,CH*.55,0,Math.PI*2); G.fill();
+
+    // Driver + passenger
+    G.fillStyle='#fbbf24'; G.beginPath(); G.arc(CW*.22,-CH*.85,8,0,Math.PI*2); G.fill();
+    G.fillStyle='#1e3a8a'; G.beginPath(); G.roundRect(CW*.14,-CH*.74,15,14,3); G.fill();
+    G.fillStyle='#f97316'; G.beginPath(); G.arc(-CW*.05,-CH*.81,7,0,Math.PI*2); G.fill();
+    G.fillStyle='#7c3aed'; G.beginPath(); G.roundRect(-CW*.13,-CH*.71,13,13,3); G.fill();
+
+    G.restore();
+  }
+
+  // ══════════════════════════════════════════════════════
+  // 4 PHASE SCENES
+  // ══════════════════════════════════════════════════════
+
+  function phase0(p){
+    // LANDING — beautiful dusk sky, aircraft coming in
+    const gy=H*.54;
+    sky(); ground(gy); runway(gy); terminal(gy);
+
+    // Ground service vehicles
+    G.fillStyle='#f59e0b'; G.beginPath(); G.roundRect(W*.64,gy+14,55,18,4); G.fill();
+    G.fillStyle='#d97706'; G.beginPath(); G.roundRect(W*.64,gy+10,20,11,3); G.fill();
+    ['#0c1420','#0c1420'].forEach((c,i)=>{ G.fillStyle=c; G.beginPath(); G.arc(W*.648+i*36,gy+33,5,0,Math.PI*2); G.fill(); });
+
+    aircraft(p, gy);
+  }
+
+  function phase1(p){
+    // PARKED — golden dusk, plane at gate, door opening
+    const gy=H*.54;
+    sky(); ground(gy); runway(gy); terminal(gy);
+
+    // Parked aircraft (smaller, at terminal left)
+    G.save(); G.translate(W*.25,gy-10); G.scale(.6,.6);
+    const FL=200,FH=30;
+    // Wing hint
+    G.fillStyle='#dce8f5';
+    G.beginPath(); G.moveTo(-FL*.06,FH*.7); G.lineTo(-FL*.44,FH*6.5); G.lineTo(-FL*.56,FH*6.5+7); G.lineTo(-FL*.06,FH*.7+FH*.5); G.closePath(); G.fill();
+    G.beginPath(); G.moveTo(-FL*.06,-FH*.7); G.lineTo(-FL*.44,-FH*6.5); G.lineTo(-FL*.56,-FH*6.5-7); G.lineTo(-FL*.06,-FH*.7-FH*.5); G.closePath(); G.fill();
+    // Fuselage
+    const fg2=G.createLinearGradient(0,-FH,0,FH);
+    fg2.addColorStop(0,'#f6fafe'); fg2.addColorStop(.4,'#e8f4fa'); fg2.addColorStop(1,'#c8daea');
+    G.fillStyle=fg2; G.beginPath(); G.ellipse(-FL*.06,0,FL*.5,FH,0,0,Math.PI*2); G.fill();
+    G.save(); G.beginPath(); G.ellipse(-FL*.06,0,FL*.5,FH,0,0,Math.PI*2); G.clip();
+    G.fillStyle='rgba(13,184,178,.94)'; G.fillRect(-FL*.6,FH*.33,FL*1.1,FH*.46);
+    G.fillStyle='rgba(251,191,36,.9)'; G.fillRect(-FL*.6,FH*.77,FL*1.1,FH*.2);
+    G.restore();
+    // Nose
+    const nb2=G.createLinearGradient(FL*.28,-FH,FL*.52,0);
+    nb2.addColorStop(0,'#f8fcfe'); nb2.addColorStop(1,'#e4f0f8');
+    G.fillStyle=nb2;
+    G.beginPath(); G.moveTo(FL*.5,0); G.bezierCurveTo(FL*.53,-FH*.75,FL*.35,-FH,FL*.28,-FH); G.lineTo(-FL*.2,-FH); G.arc(-FL*.06,0,FH,-Math.PI/2,Math.PI/2); G.lineTo(FL*.28,FH); G.bezierCurveTo(FL*.35,FH,FL*.53,FH*.75,FL*.5,0); G.fill();
+    // Tail fin
+    G.fillStyle='#dce8f5'; G.beginPath(); G.moveTo(-FL*.5,-FH); G.lineTo(-FL*.5,-FH*4.5); G.lineTo(-FL*.64,-FH*4.5); G.lineTo(-FL*.68,-FH); G.closePath(); G.fill();
+    G.fillStyle='#0db8b2'; G.beginPath(); G.moveTo(-FL*.52,-FH*1.2); G.lineTo(-FL*.52,-FH*4.0); G.lineTo(-FL*.6,-FH*4.0); G.lineTo(-FL*.62,-FH*1.2); G.closePath(); G.fill();
+    // Windows warm (cabin lit)
+    for(let i=-5;i<=5;i++){
+      G.fillStyle='rgba(254,243,199,.88)';
+      G.beginPath(); G.ellipse(i*FL*.07-FL*.06,-FH*.56,FL*.022,FH*.28,0,0,Math.PI*2); G.fill();
+      G.beginPath(); G.ellipse(i*FL*.07-FL*.06, FH*.56,FL*.022,FH*.28,0,0,Math.PI*2); G.fill();
+    }
+    // Jetway
+    const jg=G.createLinearGradient(FL*.18,0,FL*.72,0);
+    jg.addColorStop(0,'#d0e8f8'); jg.addColorStop(1,'#b0cce0');
+    G.fillStyle=jg; G.fillRect(FL*.18,-FH*.42,FL*.54,FH*.84);
+    G.strokeStyle='rgba(130,190,230,.65)'; G.lineWidth=2.5;
+    G.beginPath(); G.rect(FL*.18,-FH*.42,FL*.54,FH*.84); G.stroke();
+    // Door glow — warm golden light spilling out
+    const dg=G.createRadialGradient(FL*.2,0,0,FL*.2,0,FH*2.5);
+    dg.addColorStop(0,'rgba(254,243,130,.85)'); dg.addColorStop(.4,'rgba(254,215,80,.35)'); dg.addColorStop(1,'rgba(254,215,80,0)');
+    G.fillStyle=dg; G.beginPath(); G.arc(FL*.2,0,FH*2.5,0,Math.PI*2); G.fill();
+    G.restore();
+
+    // Landed banner
+    const ba=ez(cl((p-.2)/.3,0,1));
+    if(ba>0){
+      G.save(); G.globalAlpha=ba;
+      const bng=G.createLinearGradient(W*.15,0,W*.85,0);
+      bng.addColorStop(0,'rgba(13,184,178,0)'); bng.addColorStop(.2,'rgba(13,184,178,.9)'); bng.addColorStop(.8,'rgba(13,184,178,.9)'); bng.addColorStop(1,'rgba(13,184,178,0)');
+      G.fillStyle=bng; G.beginPath(); G.roundRect(W*.15,H*.55,W*.7,H*.07,30); G.fill();
+      G.fillStyle='rgba(255,255,255,.97)'; G.font='bold 17px Outfit,sans-serif'; G.textAlign='center';
+      G.fillText('✓  BA0245 has landed — Doors now opening', W*.5, H*.596);
+      G.restore();
+    }
+  }
+
+  function phase2(p){
+    // CORRIDOR — very bright, warm white modern terminal
+    // Ceiling
+    const cg=G.createLinearGradient(0,0,0,H*.56);
+    cg.addColorStop(0,'#f0f6fc'); cg.addColorStop(.5,'#d8e8f6'); cg.addColorStop(.85,'#6890b0'); cg.addColorStop(1,'#2a3d52');
+    G.fillStyle=cg; G.fillRect(0,0,W,H*.56);
+
+    // Floor — polished warm white marble
+    const fg3=G.createLinearGradient(0,H*.56,0,H);
+    fg3.addColorStop(0,'#d8e8f4'); fg3.addColorStop(.25,'#88aac8'); fg3.addColorStop(.6,'#3a5878'); fg3.addColorStop(1,'#1a2d40');
+    G.fillStyle=fg3; G.fillRect(0,H*.56,W,H*.44);
+
+    // Floor tiles perspective grid
+    for(let row=0;row<5;row++){
+      const ty=H*.58+row*H*.09;
+      const tw=lr(W*.06,W*.13,row/4);
+      for(let col=0;col<16;col++){
+        const tx=col*tw;
+        G.fillStyle=(row+col)%2===0?'rgba(220,236,252,.72)':'rgba(175,200,228,.52)';
+        G.fillRect(tx,ty,tw-1,H*.09-1);
+        // Highlight on lit tiles
+        if((row+col)%2===0){
+          G.fillStyle='rgba(255,255,255,.22)';
+          G.fillRect(tx+2,ty+2,tw-6,4);
+        }
+      }
+    }
+
+    // Ceiling light fixtures + cone beams — very bright
+    for(let i=0;i<8;i++){
+      const lx=W*(.04+i*.13);
+      // Fixture
+      G.fillStyle='rgba(255,253,240,.98)'; G.beginPath(); G.roundRect(lx-6,H*.04,12,7,3); G.fill();
+      // Cone
+      const cg2=G.createLinearGradient(lx,H*.05,lx,H*.59);
+      cg2.addColorStop(0,'rgba(255,252,225,.6)'); cg2.addColorStop(.12,'rgba(255,252,225,.2)'); cg2.addColorStop(.45,'rgba(255,252,225,.06)'); cg2.addColorStop(1,'rgba(255,252,225,0)');
+      G.fillStyle=cg2;
+      G.beginPath(); G.moveTo(lx,H*.05); G.lineTo(lx-W*.1,H*.59); G.lineTo(lx+W*.1,H*.59); G.closePath(); G.fill();
+      // Floor reflection
+      G.fillStyle=G.createRadialGradient(lx,H*.98,0,lx,H*.98,W*.06)||'rgba(255,255,255,0)';
+      const flr=G.createRadialGradient(lx,H*.98,0,lx,H*.98,W*.065);
+      flr.addColorStop(0,'rgba(220,240,255,.38)'); flr.addColorStop(1,'rgba(220,240,255,0)');
+      G.fillStyle=flr; G.beginPath(); G.ellipse(lx,H*.98,W*.065,H*.04,0,0,Math.PI*2); G.fill();
+    }
+
+    // Left wall — large windows with golden sunset outside
+    G.fillStyle='#1e3050'; G.fillRect(0,0,W*.09,H*.58);
+    G.fillStyle='#c8d8e8'; G.fillRect(W*.03-3,0,6,H*.58);
+    for(let i=0;i<3;i++){
+      const wy=H*.1+i*H*.14;
+      G.fillStyle='#2a4060'; G.beginPath(); G.roundRect(W*.008,wy-2,W*.082+4,H*.11+4,3); G.fill();
+      const wog=G.createLinearGradient(W*.012,wy,W*.088,wy);
+      wog.addColorStop(0,'rgba(251,191,36,.32)'); wog.addColorStop(.5,'rgba(251,146,60,.45)'); wog.addColorStop(1,'rgba(200,100,20,.25)');
+      G.fillStyle=wog; G.beginPath(); G.roundRect(W*.012,wy,W*.076,H*.1,3); G.fill();
+      G.strokeStyle='rgba(200,225,245,.5)'; G.lineWidth=1.5; G.beginPath(); G.roundRect(W*.012,wy,W*.076,H*.1,3); G.stroke();
+      G.fillStyle='rgba(15,10,5,.45)'; G.fillRect(W*.012,wy+H*.072,W*.076,H*.028);
+    }
+
+    // Right wall — vivid signs
+    G.fillStyle='#1e3050'; G.fillRect(W*.91,0,W*.09,H*.58);
+    // ARRIVALS green
+    G.fillStyle='#16a34a'; G.beginPath(); G.roundRect(W*.915,H*.1,W*.078,H*.1,6); G.fill();
+    G.fillStyle='rgba(22,163,74,.4)';
+    G.beginPath(); G.roundRect(W*.91,H*.1-2,W*.09,H*.1+4,5); G.fill();
+    G.fillStyle='#fff'; G.font='bold 12px Outfit,sans-serif'; G.textAlign='center';
+    G.fillText('▶ ARRIVALS',W*.954,H*.148); G.fillText('EXIT',W*.954,H*.174);
+    // BAGGAGE blue
+    G.fillStyle='#2563eb'; G.beginPath(); G.roundRect(W*.915,H*.26,W*.078,H*.08,5); G.fill();
+    G.fillStyle='#fff'; G.font='bold 10px Outfit,sans-serif'; G.fillText('BAGGAGE',W*.954,H*.31);
+    // TAXIS amber
+    G.fillStyle='#d97706'; G.beginPath(); G.roundRect(W*.915,H*.38,W*.078,H*.07,5); G.fill();
+    G.fillStyle='#fff'; G.font='bold 10px Outfit,sans-serif'; G.fillText('TAXIS ▶',W*.954,H*.425);
+
+    // Depth vanishing glow
+    const vg=G.createRadialGradient(W*.5,H*.58,0,W*.5,H*.58,W*.4);
+    vg.addColorStop(0,'rgba(13,184,178,.2)'); vg.addColorStop(1,'rgba(13,184,178,0)');
+    G.fillStyle=vg; G.fillRect(0,H*.36,W,H*.25);
+
+    // PASSENGERS — vivid, large, clear
+    const ppl=[
+      {bx:W*.16,sk:'#fbbf24',sh:'#1e3a8a',bag:true, lag:0},
+      {bx:W*.30,sk:'#f97316',sh:'#7c3aed',bag:false,lag:.08},
+      {bx:W*.44,sk:'#d4a574',sh:'#0f766e',bag:true, lag:.14},
+      {bx:W*.57,sk:'#fde68a',sh:'#b91c1c',bag:true, lag:.06},
+      {bx:W*.70,sk:'#c4a882',sh:'#1d4ed8',bag:false,lag:.18},
+    ];
+    ppl.forEach(pp=>{
+      const pt=cl(p-pp.lag,0,1); if(pt<=0) return;
+      const pep=ez(pt);
+      const py=lr(H*.58,H*.84,pep);
+      const sc=lr(.44,1.08,pep);
+      person(pp.bx+Math.sin(pt*20)*4*sc, py, sc, pt, pp.sk, pp.sh, pp.bag);
+    });
+  }
+
+  function phase3(p){
+    // ARRIVALS EXIT — golden hour, car, driver, reunion
+    // Rich golden sky
+    const sg2=G.createLinearGradient(0,0,0,H*.52);
+    sg2.addColorStop(0,'#0d0828'); sg2.addColorStop(.28,'#1e1058');
+    sg2.addColorStop(.55,'#7c2d12'); sg2.addColorStop(.72,'#ea580c');
+    sg2.addColorStop(.85,'#f97316'); sg2.addColorStop(1,'#fbbf24');
+    G.fillStyle=sg2; G.fillRect(0,0,W,H*.52);
+    // Sun
+    const sun2=G.createRadialGradient(W*.7,H*.52,0,W*.7,H*.52,H*.32);
+    sun2.addColorStop(0,'rgba(253,224,71,.62)'); sun2.addColorStop(.38,'rgba(251,146,60,.3)'); sun2.addColorStop(1,'rgba(251,146,60,0)');
+    G.fillStyle=sun2; G.beginPath(); G.arc(W*.7,H*.52,H*.32,0,Math.PI*2); G.fill();
+    G.fillStyle='rgba(255,255,200,.92)'; G.beginPath(); G.arc(W*.7,H*.52,H*.042,0,Math.PI*2); G.fill();
+    // Lens flare
+    const lf2=G.createLinearGradient(0,H*.52,W,H*.52);
+    lf2.addColorStop(0,'rgba(253,224,71,0)'); lf2.addColorStop(.64,'rgba(255,255,200,.22)'); lf2.addColorStop(.7,'rgba(253,224,71,.08)'); lf2.addColorStop(1,'rgba(253,224,71,0)');
+    G.fillStyle=lf2; G.fillRect(0,H*.50,W,5);
+
+    // Ground — warm tarmac
+    const gg2=G.createLinearGradient(0,H*.52,0,H);
+    gg2.addColorStop(0,'#2e1b07'); gg2.addColorStop(.2,'#1e1406'); gg2.addColorStop(.55,'#120e08'); gg2.addColorStop(1,'#060810');
+    G.fillStyle=gg2; G.fillRect(0,H*.52,W,H*.48);
+    G.fillStyle=G.createRadialGradient(W*.5,H*.52,0,W*.5,H*.52,W*.55)||'rgba(0,0,0,0)';
+    const hog=G.createRadialGradient(W*.5,H*.52,0,W*.5,H*.52,W*.55);
+    hog.addColorStop(0,'rgba(251,146,60,.2)'); hog.addColorStop(1,'rgba(251,146,60,0)');
+    G.fillStyle=hog; G.fillRect(0,H*.38,W,H*.25);
+
+    // Road line
+    G.strokeStyle='rgba(251,191,36,.55)'; G.lineWidth=4; G.setLineDash([38,24]);
+    G.beginPath(); G.moveTo(0,H*.74); G.lineTo(W,H*.74); G.stroke();
+    G.setLineDash([]);
+    G.strokeStyle='rgba(200,180,140,.35)'; G.lineWidth=2;
+    G.beginPath(); G.moveTo(0,H*.52); G.lineTo(W,H*.52); G.stroke();
+
+    // Arrivals building — right side, richly lit
+    const abg=G.createLinearGradient(W*.55,H*.16,W*.55,H*.52);
+    abg.addColorStop(0,'#2a4070'); abg.addColorStop(.6,'#1a2d52'); abg.addColorStop(1,'#0e1e38');
+    G.fillStyle=abg; G.beginPath(); G.roundRect(W*.55,H*.16,W*.45,H*.38,4); G.fill();
+    // Golden glow on facade
+    G.fillStyle='rgba(251,146,60,.12)'; G.beginPath(); G.roundRect(W*.55,H*.16,W*.45,H*.2,4); G.fill();
+
+    // Building windows vivid
+    for(let i=0;i<5;i++){
+      const wx=W*.58+i*W*.074;
+      // Glow halo
+      const whl=G.createRadialGradient(wx+W*.034,H*.256,0,wx+W*.034,H*.256,W*.06);
+      whl.addColorStop(0,'rgba(254,243,199,.5)'); whl.addColorStop(1,'rgba(254,243,199,0)');
+      G.fillStyle=whl; G.beginPath(); G.arc(wx+W*.034,H*.256,W*.06,0,Math.PI*2); G.fill();
+      G.fillStyle='rgba(254,249,195,.95)'; G.beginPath(); G.roundRect(wx,H*.22,W*.058,H*.14,4); G.fill();
+      G.strokeStyle='rgba(218,190,100,.6)'; G.lineWidth=1.5; G.beginPath(); G.roundRect(wx,H*.22,W*.058,H*.14,4); G.stroke();
+    }
+
+    // ARRIVALS EXIT sign — vivid green
+    G.fillStyle='#16a34a'; G.beginPath(); G.roundRect(W*.595,H*.16,W*.29,H*.072,6); G.fill();
+    G.fillStyle=G.createRadialGradient(W*.74,H*.196,0,W*.74,H*.196,W*.18)||'rgba(22,163,74,0)';
+    const sg3=G.createRadialGradient(W*.74,H*.196,0,W*.74,H*.196,W*.18);
+    sg3.addColorStop(0,'rgba(22,163,74,.42)'); sg3.addColorStop(1,'rgba(22,163,74,0)');
+    G.fillStyle=sg3; G.beginPath(); G.arc(W*.74,H*.196,W*.18,0,Math.PI*2); G.fill();
+    G.fillStyle='#fff'; G.font='bold 14px Outfit,sans-serif'; G.textAlign='center';
+    G.fillText('✈  ARRIVALS  EXIT',W*.74,H*.21);
+
+    // Glass exit doors
+    [[W*.64,W*.74]].forEach(()=>{});
+    G.fillStyle='rgba(147,210,240,.22)'; G.beginPath(); G.roundRect(W*.635,H*.382,W*.082,H*.16,3); G.fill();
+    G.fillStyle='rgba(147,210,240,.22)'; G.beginPath(); G.roundRect(W*.73,H*.382,W*.082,H*.16,3); G.fill();
+    G.strokeStyle='rgba(160,225,252,.55)'; G.lineWidth=2;
+    [W*.635,W*.73].forEach(dx=>{ G.beginPath(); G.roundRect(dx,H*.382,W*.082,H*.16,3); G.stroke(); });
+
+    // Canopy
+    G.fillStyle='#1e3558'; G.fillRect(W*.55,H*.38,W*.45,H*.04);
+    G.fillStyle=G.createLinearGradient(W*.55,H*.38,W,H*.38)||'rgba(251,191,36,0)';
+    const cog=G.createLinearGradient(W*.55,H*.39,W,H*.39);
+    cog.addColorStop(0,'rgba(251,146,60,.12)'); cog.addColorStop(1,'rgba(251,146,60,0)');
+    G.fillStyle=cog; G.fillRect(W*.55,H*.38,W*.45,H*.04);
+
+    // Lamp posts
+    [W*.22,W*.42,W*.62].forEach(lx=>{
+      G.strokeStyle='#2a3a50'; G.lineWidth=5;
+      G.beginPath(); G.moveTo(lx,H*.52); G.lineTo(lx,H*.22); G.stroke();
+      G.beginPath(); G.moveTo(lx,H*.22); G.lineTo(lx+24,H*.22); G.stroke();
+      const lpg=G.createRadialGradient(lx+24,H*.22,0,lx+24,H*.22,H*.14);
+      lpg.addColorStop(0,'rgba(254,249,195,.68)'); lpg.addColorStop(1,'rgba(254,249,195,0)');
+      G.fillStyle=lpg; G.beginPath(); G.arc(lx+24,H*.22,H*.14,0,Math.PI*2); G.fill();
+      G.fillStyle='rgba(255,253,220,.96)'; G.beginPath(); G.arc(lx+24,H*.22,6,0,Math.PI*2); G.fill();
+    });
+
+    // CAR slides in from right
+    const cp=ez(cl(p/.3,0,1));
+    const cx=lr(W*1.15,W*.3,cp);
+    car(cx,H*.63,.9,1);
+
+    // DRIVER standing with name board
+    if(p>.3){
+      const da=ez(cl((p-.3)/.2,0,1));
+      const dX=cx-H*.12;
+      G.save(); G.globalAlpha=da; G.translate(dX,H*.56);
+      const dsc=0.8; G.scale(dsc,dsc);
+
+      // Board glow
+      const dbg=G.createRadialGradient(0,-72,0,0,-72,55);
+      dbg.addColorStop(0,'rgba(255,255,255,.38)'); dbg.addColorStop(1,'rgba(255,255,255,0)');
+      G.fillStyle=dbg; G.beginPath(); G.arc(0,-72,55,0,Math.PI*2); G.fill();
+      // Board
+      const nbb=G.createLinearGradient(-38,-84,38,-62);
+      nbb.addColorStop(0,'#f0f8ff'); nbb.addColorStop(1,'#e0eef8');
+      G.fillStyle=nbb; G.beginPath(); G.roundRect(-38,-84,76,24,6); G.fill();
+      G.strokeStyle='#0db8b2'; G.lineWidth=2.5; G.beginPath(); G.roundRect(-38,-84,76,24,6); G.stroke();
+      G.fillStyle='#06101e'; G.font='bold 10px Outfit,sans-serif'; G.textAlign='center';
+      G.fillText('JOHN  SMITH',0,-67);
+
+      // Driver figure
+      G.fillStyle='#fbbf24'; G.beginPath(); G.arc(0,-42,11,0,Math.PI*2); G.fill();
+      G.fillStyle='#0c0a00'; G.beginPath(); G.ellipse(0,-51,11,6,0,Math.PI,Math.PI*2); G.fill();
+      const dsb=G.createLinearGradient(-11,-34,11,-12);
+      dsb.addColorStop(0,'#1e3a8a'); dsb.addColorStop(1,'#142d70');
+      G.fillStyle=dsb; G.beginPath(); G.roundRect(-11,-34,22,23,4); G.fill();
+      G.fillStyle='#0db8b2'; G.beginPath(); G.moveTo(-2,-34); G.lineTo(2,-34); G.lineTo(1,-15); G.lineTo(-1,-15); G.closePath(); G.fill();
+      // Arms (holding board wide)
+      G.strokeStyle='#fbbf24'; G.lineWidth=6; G.lineCap='round';
+      G.beginPath(); G.moveTo(-11,-26); G.lineTo(-38,-22); G.stroke();
+      G.beginPath(); G.moveTo(11,-26); G.lineTo(20,-20); G.stroke();
+      // Legs
+      G.strokeStyle='#0f172a'; G.lineWidth=7;
+      G.beginPath(); G.moveTo(-5,-11); G.lineTo(-6,15); G.stroke();
+      G.beginPath(); G.moveTo(5,-11); G.lineTo(6,15); G.stroke();
+      G.fillStyle='#0f172a';
+      G.beginPath(); G.ellipse(-6,16,8,3.5,-.2,0,Math.PI*2); G.fill();
+      G.beginPath(); G.ellipse(6,16,8,3.5,.2,0,Math.PI*2); G.fill();
+      G.restore();
+    }
+
+    // PASSENGERS walking out
+    if(p>.15){
+      [[.15,'#fbbf24','#1e40af',true],[.28,'#f97316','#7c3aed',false],[.4,'#d4a574','#0f766e',true]].forEach(([lag,sk,sh,bag],i)=>{
+        const pt=cl(p-lag,0,1); if(pt<=0) return;
+        const pep=ez(pt);
+        person(lr(W*.66,W*.32-i*28,pep), lr(H*.44,H*.6,pep), lr(.4,.72,pep), pt, sk, sh, bag);
+      });
+    }
+
+    // REUNION sparkles + banner
+    if(p>.75){
+      const sa=ez(cl((p-.75)/.15,0,1));
+      G.save(); G.globalAlpha=sa;
+      const met=cx-H*.12;
+      // Teal burst rings
+      for(let r=0;r<3;r++){
+        const rr=25+r*18+Math.sin(Date.now()*.01+r)*6;
+        G.strokeStyle=`rgba(13,184,178,${(.6-.15*r)*sa})`; G.lineWidth=2.5;
+        G.beginPath(); G.arc(met,H*.52,rr,0,Math.PI*2); G.stroke();
+      }
+      // Gold sparkles
+      for(let i=0;i<8;i++){
+        const a=(i/8)*Math.PI*2+Date.now()*.0018;
+        G.fillStyle=`rgba(251,191,36,${.8*sa})`;
+        G.beginPath(); G.arc(met+Math.cos(a)*55,H*.5+Math.sin(a)*42,4.5,0,Math.PI*2); G.fill();
+      }
+      // Banner
+      const bnw=W*.54, bnh=H*.06;
+      const bng2=G.createLinearGradient(W*.23,0,W*.77,0);
+      bng2.addColorStop(0,'rgba(13,184,178,0)'); bng2.addColorStop(.15,'rgba(13,184,178,.92)'); bng2.addColorStop(.85,'rgba(13,184,178,.92)'); bng2.addColorStop(1,'rgba(13,184,178,0)');
+      G.fillStyle=bng2; G.beginPath(); G.roundRect(W*.23,H*.84,bnw,bnh,32); G.fill();
+      G.fillStyle='rgba(255,255,255,.98)'; G.font='bold 15px Outfit,sans-serif'; G.textAlign='center';
+      G.fillText('✓  Perfect Pickup — Powered by ArrivIQ',W*.5,H*.878);
+      G.restore();
+    }
+  }
+
+  // ── MAIN LOOP ──────────────────────────────────────────
+  function render(ts){
+    requestAnimationFrame(render);
+    if(!t0) t0=ts;
+    const elapsed=(ts-t0)%LOOP;
+    const gT=elapsed/LOOP;
+
+    const ph=gT<.25?0:gT<.5?1:gT<.75?2:3;
+    const pT=ph===0?gT/.25:ph===1?(gT-.25)/.25:ph===2?(gT-.5)/.25:(gT-.75)/.25;
+
+    if(ph!==lastPh){
+      const el=document.getElementById('phlbl');
+      if(el){ el.style.opacity='0'; setTimeout(()=>{ el.textContent=PHASES[ph]; el.style.opacity='1'; },280); }
+      const sideData=[
+        {lc:'Flight BA0245',lt:'On Final Approach',ls:'Heathrow LHR · ETA 14:15 UTC',rc:'Driver James',rt:'Waiting at Arrivals',rs:'Car Reg: AB12 CDE · Ready'},
+        {lc:'BA0245 Landed',lt:'Doors Now Open',ls:'Gate T5 · Passengers disembarking',rc:'Driver James',rt:'Heading to Arrivals',rs:'ArrivIQ alert sent · On way'},
+        {lc:'Passengers',lt:'Walking to Arrivals',ls:'Terminal corridor · 3 min ETA',rc:'Driver James',rt:'Name Board Ready',rs:'AB12 CDE · Parked outside'},
+        {lc:'John Smith',lt:'Exiting Arrivals',ls:'Spotted the driver · 10 sec',rc:'Driver James',rt:'Perfect Pickup',rs:'Powered by ArrivIQ ✓'},
+      ];
+      const sd=sideData[ph];
+      ['lbl-left-cat','lbl-left-title','lbl-left-sub'].forEach((id,i)=>{
+        const e=document.getElementById(id); if(e) e.textContent=[sd.lc,sd.lt,sd.ls][i];
+      });
+      ['lbl-right-cat','lbl-right-title','lbl-right-sub'].forEach((id,i)=>{
+        const e=document.getElementById(id); if(e) e.textContent=[sd.rc,sd.rt,sd.rs][i];
+      });
+      lastPh=ph;
+    }
+
+    G.clearRect(0,0,W,H);
+
+    if(ph===0)      phase0(pT);
+    else if(ph===1) phase1(pT);
+    else if(ph===2) phase2(pT);
+    else            phase3(pT);
+  }
+
+  requestAnimationFrame(render);
+})();
+
+// ── PRICING & MODAL ──────────────────────────────────────────────────────────
+const pdata=[
+  {n:'Starter',m:149,a:119,d:'Sole traders & small operators.',pd:'Up to 15 vehicles · All UK airports',fs:['Up to 15 vehicles','All 40+ UK airports','WhatsApp driver alerts','Email support','Flight API monitoring'],ft:false},
+  {n:'Growth',m:299,a:239,d:'Best for 30+ return pickups per day.',pd:'Up to 40 vehicles · All UK airports',fs:['Up to 40 vehicles','Priority API access','Phone & chat support','Analytics dashboard','Multi-driver alerts'],ft:true},
+  {n:'Pro',m:499,a:399,d:'Multi-airport established operators.',pd:'Up to 80 vehicles · All UK airports',fs:['Up to 80 vehicles','Dedicated account manager','SLA guarantee','Custom WhatsApp templates','Bulk booking import'],ft:false},
+  {n:'Enterprise',m:799,a:639,d:'White-label & API for large fleets.',pd:'Unlimited vehicles · White-label API',fs:['Unlimited vehicles','Full REST API access','White-label branding','Custom integration','Priority onboarding'],ft:false},
+];
+let bil='monthly';
+function setB(m){bil=m;document.getElementById('tm').classList.toggle('on',m==='monthly');document.getElementById('ta').classList.toggle('on',m==='annual');document.getElementById('sp').style.display=m==='annual'?'inline-block':'none';rnd();}
+function rnd(){document.getElementById('pg').innerHTML=pdata.map(p=>{const pr=bil==='annual'?p.a:p.m,cl=bil==='annual'?'/mo billed annually':'/month',cy=bil==='annual'?'year':'month';return`<div class="pc${p.ft?' ft':''}">${p.ft?'<div class="popb">MOST POPULAR</div>':''}<div class="pnm">${p.n}</div><div class="ppr">£${pr} <span>${cl}</span></div><div class="ptrl">🎁 30-day free trial included</div><div class="pds">${p.d}</div><ul class="pfl">${p.fs.map(f=>`<li><span class="ck">✦</span>${f}</li>`).join('')}</ul><button class="pbtn ${p.ft?'pbd':'pbo'}" onclick="openM('${p.n}','${pr}','${cy}')">Start Free Trial →</button></div>`;}).join('');}
+rnd();
+function openM(n,pr,cy){document.getElementById('mpn').textContent=n+' Plan';document.getElementById('mpd').textContent=(pdata.find(p=>p.n===n)||{pd:''}).pd||'All UK airports';document.getElementById('mpp').textContent='£'+pr;document.getElementById('mpc').textContent='/'+cy;document.getElementById('tpr').textContent='£'+pr+'/'+cy;document.getElementById('cf').style.display='block';document.getElementById('ss').style.display='none';document.getElementById('ov').classList.add('open');document.body.style.overflow='hidden';}
+function closeM(){document.getElementById('ov').classList.remove('open');document.body.style.overflow='';}
+function handleOv(e){if(e.target===document.getElementById('ov'))closeM();}
+function pay(){if(!document.getElementById('tcb').checked){alert('Please agree to the Terms of Service to continue.');return;}const b=document.querySelector('.paybtn');b.textContent='Processing...';b.disabled=true;setTimeout(()=>{document.getElementById('cf').style.display='none';document.getElementById('ss').style.display='block';},1800);}
+function fmtC(el){let v=el.value.replace(/\D/g,'').slice(0,16);el.value=v.replace(/(.{4})/g,'$1  ').trim();}
+function fmtE(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.slice(0,2)+' / '+v.slice(2,4);el.value=v;}
+</script>
+
+<!-- DEMO BOOKING MODAL -->
+<div id="demo-ov" style="display:none;position:fixed;inset:0;background:rgba(2,6,9,.72);z-index:2000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)" onclick="handleDemoOv(event)">
+  <div style="background:#fff;border-radius:26px;width:100%;max-width:580px;max-height:94vh;overflow-y:auto;box-shadow:0 36px 90px rgba(2,6,9,.35)">
+
+    <!-- Header -->
+    <div style="padding:1.8rem 1.8rem 0;display:flex;align-items:flex-start;justify-content:space-between">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-weight:900;font-size:1.45rem;color:#06101e;letter-spacing:-.02em;margin-bottom:.25rem">Book a free demo</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.85rem;color:#64748b;font-weight:300">15 minutes. We'll show you live flight monitoring for your fleet.</div>
+      </div>
+      <button onclick="closeDemo()" style="width:36px;height:36px;border-radius:50%;border:1px solid #dde5f0;background:transparent;cursor:pointer;font-size:1.1rem;color:#64748b;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:1rem">✕</button>
+    </div>
+
+    <!-- What to expect strip -->
+    <div style="margin:1.2rem 1.8rem;background:#f6f8fc;border-radius:14px;padding:1rem 1.3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem">
+      <div style="text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">✈️</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#06101e;margin-bottom:2px">Live flight demo</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.68rem;color:#64748b;font-weight:300">See real-time monitoring on your routes</div>
+      </div>
+      <div style="text-align:center;border-left:1px solid #dde5f0;border-right:1px solid #dde5f0;padding:0 .5rem">
+        <div style="font-size:1.2rem;margin-bottom:4px">💬</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#06101e;margin-bottom:2px">WhatsApp walkthrough</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.68rem;color:#64748b;font-weight:300">Watch an alert fire to a driver live</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:4px">💰</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#06101e;margin-bottom:2px">Your ROI calculated</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:.68rem;color:#64748b;font-weight:300">We'll show your exact monthly saving</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div id="demo-form" style="padding:0 1.8rem 2rem">
+
+      <div style="font-family:'Outfit',sans-serif;font-size:.71rem;font-weight:600;color:#64748b;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.85rem">Your details</div>
+
+      <div style="display:grid;gap:.9rem;margin-bottom:.9rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">First name</label>
+            <input id="d-fname" class="fi2" type="text" placeholder="James" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Last name</label>
+            <input id="d-lname" class="fi2" type="text" placeholder="Wilson" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'">
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Work email</label>
+          <input id="d-email" type="email" placeholder="james@londonexecutivecars.co.uk" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Company name</label>
+            <input id="d-company" type="text" placeholder="London Executive Cars" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.4rem">
+            <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Phone number</label>
+            <input id="d-phone" type="tel" placeholder="+44 7700 900123" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;transition:border-color .2s,box-shadow .2s" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'">
+          </div>
+        </div>
+      </div>
+
+      <div style="height:1px;background:#dde5f0;margin:1.2rem 0"></div>
+      <div style="font-family:'Outfit',sans-serif;font-size:.71rem;font-weight:600;color:#64748b;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.85rem">Your fleet</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Number of vehicles</label>
+          <select id="d-vehicles" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='#0db8b2'" onblur="this.style.borderColor='#c4d0e8'">
+            <option>1–5 vehicles</option>
+            <option>6–15 vehicles</option>
+            <option selected>16–40 vehicles</option>
+            <option>41–80 vehicles</option>
+            <option>81–150 vehicles</option>
+            <option>150+ vehicles</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Daily return pickups (approx)</label>
+          <select id="d-pickups" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='#0db8b2'" onblur="this.style.borderColor='#c4d0e8'">
+            <option>Under 10/day</option>
+            <option>10–20/day</option>
+            <option selected>20–40/day</option>
+            <option>40–80/day</option>
+            <option>80–150/day</option>
+            <option>150+/day</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Primary airport(s)</label>
+          <select id="d-airport" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='#0db8b2'" onblur="this.style.borderColor='#c4d0e8'">
+            <option>Heathrow (LHR)</option>
+            <option>Gatwick (LGW)</option>
+            <option>Manchester (MAN)</option>
+            <option>Stansted (STN)</option>
+            <option>Luton (LTN)</option>
+            <option>Edinburgh (EDI)</option>
+            <option>Birmingham (BHX)</option>
+            <option>Multiple airports</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem">
+          <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Current flight tracking method</label>
+          <select id="d-current" style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;cursor:pointer;transition:border-color .2s" onfocus="this.style.borderColor='#0db8b2'" onblur="this.style.borderColor='#c4d0e8'">
+            <option>Manual — checking FlightAware/apps</option>
+            <option>Coordinator watches boards</option>
+            <option>Driver checks themselves</option>
+            <option>Existing dispatch software</option>
+            <option>No tracking currently</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="height:1px;background:#dde5f0;margin:1.2rem 0"></div>
+      <div style="font-family:'Outfit',sans-serif;font-size:.71rem;font-weight:600;color:#64748b;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.85rem">Choose a time slot</div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.9rem" id="slot-grid"></div>
+
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem">
+        <label style="font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;color:#06101e">Anything you'd like us to prepare?</label>
+        <textarea id="d-notes" rows="2" placeholder="e.g. We operate 35 vehicles at Heathrow and want to see the WhatsApp alert flow..." style="padding:.72rem 1rem;border:1px solid #c4d0e8;border-radius:11px;font-family:'Outfit',sans-serif;font-size:.89rem;color:#06101e;background:#fff;outline:none;width:100%;resize:vertical;transition:border-color .2s,box-shadow .2s;line-height:1.55" onfocus="this.style.borderColor='#0db8b2';this.style.boxShadow='0 0 0 3px rgba(13,184,178,.12)'" onblur="this.style.borderColor='#c4d0e8';this.style.boxShadow='none'"></textarea>
+      </div>
+
+      <button onclick="bookDemo()" style="width:100%;padding:.96rem;border-radius:50px;background:linear-gradient(135deg,#0db8b2,#14d4ce);color:#fff;font-family:'Outfit',sans-serif;font-weight:600;font-size:.96rem;border:none;cursor:pointer;transition:all .28s;box-shadow:0 6px 24px rgba(13,184,178,.4);letter-spacing:.02em" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 10px 30px rgba(13,184,178,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 24px rgba(13,184,178,.4)'">
+        Confirm My Demo Booking →
+      </button>
+      <p style="font-family:'Outfit',sans-serif;font-size:.71rem;color:#94a3b8;text-align:center;margin-top:.75rem;line-height:1.55">No commitment. We'll send a Google Meet link to your email within 2 hours.</p>
+    </div>
+
+    <!-- Success state -->
+    <div id="demo-success" style="display:none;text-align:center;padding:2.8rem 1.8rem 3.2rem">
+      <div style="width:76px;height:76px;border-radius:50%;background:#d0f5f3;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;border:2px solid rgba(13,184,178,.28)">✅</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:1.5rem;color:#06101e;margin-bottom:.75rem;letter-spacing:-.02em">Demo booked!</div>
+      <p style="font-family:'Outfit',sans-serif;font-size:.9rem;color:#64748b;max-width:340px;margin:0 auto .6rem;line-height:1.7">Thanks — we'll send a Google Meet link to your email within 2 hours. Rajkumar will walk you through ArrivIQ live for your fleet.</p>
+      <p style="font-family:'Outfit',sans-serif;font-size:.82rem;color:#0db8b2;font-weight:600;margin-top:.5rem" id="demo-slot-conf"></p>
+      <div style="margin-top:1.5rem;background:#f6f8fc;border-radius:14px;padding:1rem 1.3rem;text-align:left">
+        <p style="font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;color:#06101e;margin-bottom:.5rem">What happens next:</p>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;gap:.6rem;align-items:flex-start"><span style="color:#0db8b2;font-size:.8rem;flex-shrink:0;margin-top:1px">1.</span><span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:#64748b">Google Meet link sent to your email within 2 hours</span></div>
+          <div style="display:flex;gap:.6rem;align-items:flex-start"><span style="color:#0db8b2;font-size:.8rem;flex-shrink:0;margin-top:1px">2.</span><span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:#64748b">15-minute call — live flight monitoring demo on your routes</span></div>
+          <div style="display:flex;gap:.6rem;align-items:flex-start"><span style="color:#0db8b2;font-size:.8rem;flex-shrink:0;margin-top:1px">3.</span><span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:#64748b">Your personal ROI calculation sent after the call</span></div>
+          <div style="display:flex;gap:.6rem;align-items:flex-start"><span style="color:#0db8b2;font-size:.8rem;flex-shrink:0;margin-top:1px">4.</span><span style="font-family:'Outfit',sans-serif;font-size:.78rem;color:#64748b">Free 30-day trial set up same day if you want to proceed</span></div>
+        </div>
+      </div>
+      <button onclick="closeDemo()" style="margin-top:1.8rem;padding:.82rem 2.4rem;border-radius:50px;background:#06101e;color:#fff;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openDemo(){
+  document.getElementById('demo-ov').style.display='flex';
+  document.body.style.overflow='hidden';
+  renderSlots();
+}
+function closeDemo(){
+  document.getElementById('demo-ov').style.display='none';
+  document.body.style.overflow='';
+}
+function handleDemoOv(e){if(e.target===document.getElementById('demo-ov'))closeDemo();}
+
+let selectedSlot=null;
+function renderSlots(){
+  const days=['Mon','Tue','Wed','Thu','Fri'];
+  const times=['9:00am','10:30am','12:00pm','2:00pm','3:30pm','5:00pm'];
+  const today=new Date();
+  const slots=[];
+  let d=0,t=0;
+  for(let i=0;i<9;i++){
+    const date=new Date(today); date.setDate(today.getDate()+d+1);
+    while([0,6].includes(date.getDay())){ d++; date.setDate(today.getDate()+d+1);}
+    const label=days[date.getDay()-1]+' '+date.getDate()+'/'+(date.getMonth()+1);
+    slots.push({label, time:times[t%times.length], id:'slot-'+i});
+    t++; if(t%3===0) d++;
+  }
+  const g=document.getElementById('slot-grid');
+  g.innerHTML=slots.map((s,i)=>`
+    <div id="${s.id}" onclick="selectSlot('${s.id}','${s.label} at ${s.time}')"
+      style="border:1px solid #dde5f0;border-radius:10px;padding:.6rem .8rem;cursor:pointer;text-align:center;transition:all .15s;background:#fff">
+      <div style="font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;color:#06101e">${s.label}</div>
+      <div style="font-family:'Outfit',sans-serif;font-size:.78rem;color:#0db8b2;margin-top:2px">${s.time}</div>
+    </div>
+  `).join('');
+}
+function selectSlot(id,label){
+  selectedSlot=label;
+  document.querySelectorAll('#slot-grid > div').forEach(el=>{
+    el.style.border='1px solid #dde5f0';
+    el.style.background='#fff';
+  });
+  const el=document.getElementById(id);
+  if(el){ el.style.border='2px solid #0db8b2'; el.style.background='#d0f5f3'; }
+}
+// ── CONFIG — REPLACE THESE 4 VALUES ─────────────────────────────────────────
+const EMAILJS_PUBLIC_KEY   = "ztrRZXBSBsHEfD2id";   // from emailjs.com → Account
+const EMAILJS_SERVICE_ID   = "service_p145hxj";   // from EmailJS → Email Services
+const EMAILJS_TEMPLATE_ID  = "template_60azvp9";  // from EmailJS → Email Templates
+const GOOGLE_SHEET_URL     = "YOUR_GOOGLE_APPS_SCRIPT_URL"; // from Google Apps Script deploy
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function bookDemo(){
+  const fn  = document.getElementById('d-fname').value.trim();
+  const ln  = document.getElementById('d-lname').value.trim();
+  const em  = document.getElementById('d-email').value.trim();
+  const co  = document.getElementById('d-company').value.trim();
+  const ph  = document.getElementById('d-phone').value.trim();
+  const veh = document.getElementById('d-vehicles').value;
+  const pu  = document.getElementById('d-pickups').value;
+  const ap  = document.getElementById('d-airport').value;
+  const cur = document.getElementById('d-current').value;
+  const notes = document.getElementById('d-notes').value.trim();
+
+  if(!fn||!ln){alert('Please enter your full name.');return;}
+  if(!em||!em.includes('@')){alert('Please enter a valid email address.');return;}
+  if(!co){alert('Please enter your company name.');return;}
+  if(!selectedSlot){alert('Please select a demo time slot.');return;}
+
+  const btn = document.querySelector('#demo-form button[onclick="bookDemo()"]');
+  const origText = btn.textContent;
+  btn.textContent = 'Booking...';
+  btn.disabled = true;
+  btn.style.opacity = '.7';
+
+  const bookingData = {
+    from_name:     fn + ' ' + ln,
+    first_name:    fn,
+    company:       co,
+    email:         em,
+    phone:         ph || 'Not provided',
+    vehicles:      veh,
+    daily_pickups: pu,
+    airport:       ap,
+    current_method:cur,
+    slot:          selectedSlot,
+    notes:         notes || 'None',
+    booked_at:     new Date().toLocaleString('en-GB', {dateStyle:'full',timeStyle:'short'})
+  };
+
+  let emailOK = false, sheetOK = false;
+
+  // ── 1. SEND EMAIL via EmailJS ──────────────────────────────────────────────
+  try {
+    if(EMAILJS_PUBLIC_KEY !== "ztrRZXBSBsHEfD2id") {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, bookingData, EMAILJS_PUBLIC_KEY);
+      emailOK = true;
+    }
+  } catch(e){ console.warn('EmailJS error:', e); }
+
+  // ── 2. SEND TO GOOGLE SHEETS ───────────────────────────────────────────────
+  try {
+    if(GOOGLE_SHEET_URL !== "YOUR_GOOGLE_APPS_SCRIPT_URL") {
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(bookingData)
+      });
+      sheetOK = true;
+    }
+  } catch(e){ console.warn('Sheets error:', e); }
+
+  // ── 3. SHOW SUCCESS ────────────────────────────────────────────────────────
+  document.getElementById('demo-slot-conf').textContent = 'Confirmed for: ' + selectedSlot;
+  document.getElementById('demo-form').style.display = 'none';
+  document.getElementById('demo-success').style.display = 'block';
+
+  btn.textContent = origText;
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+</script>
+
+</body>
+</html>
